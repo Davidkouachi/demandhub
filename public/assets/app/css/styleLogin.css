@@ -1,0 +1,6 @@
+body {
+        background-image: url("../images/plan1.png");
+        background-size: cover;       /* L’image occupe tout l’espace */
+        background-position: center;  /* Centrée */
+        background-repeat: no-repeat; /* Pas de répétition */
+}

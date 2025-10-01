@@ -1,0 +1,220 @@
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+/* Début chargement données */
+#preloader_ch {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 99999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: not-allowed;
+}
+
+.spinner_preloader_ch {
+    position: relative;
+    width: 40px;
+    height: 40px;
+}
+
+.spinner_preloader_ch div {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: white;
+    border-radius: 50%;
+    animation: spin_ch_dot 1.2s linear infinite;
+}
+
+.spinner_preloader_ch div:nth-child(1) { top: 0px; left: 17px; animation-delay: 0s; }
+.spinner_preloader_ch div:nth-child(2) { top: 5px; left: 29px; animation-delay: -0.1s; }
+.spinner_preloader_ch div:nth-child(3) { top: 17px; left: 34px; animation-delay: -0.2s; }
+.spinner_preloader_ch div:nth-child(4) { top: 29px; left: 29px; animation-delay: -0.3s; }
+.spinner_preloader_ch div:nth-child(5) { top: 34px; left: 17px; animation-delay: -0.4s; }
+.spinner_preloader_ch div:nth-child(6) { top: 29px; left: 5px; animation-delay: -0.5s; }
+.spinner_preloader_ch div:nth-child(7) { top: 17px; left: 0px; animation-delay: -0.6s; }
+.spinner_preloader_ch div:nth-child(8) { top: 5px; left: 5px; animation-delay: -0.7s; }
+
+@keyframes spin_ch_dot {
+    0%, 20%, 80%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.5);
+        opacity: 0.5;
+    }
+}
+
+/* Fin chargement données */
+
+
+#pageloader_overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.3); /* fond semi-transparent */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050; /* au-dessus de tout */
+}
+
+
+:root {
+  --color-primaire: #116aef;
+  --color-secondaire: #f4f4f4;
+  --color-succès: #28a745;
+  --color-erreur: #dc3545;
+
+  --color-loader: #1877f2;
+}
+
+
+/* debut animation 1 */
+#pageLoader {
+  position: fixed;
+  inset: 0;
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  pointer-events: none;
+  z-index: 9999;
+}
+#pageLoader.active {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: all;
+}
+.loader-overlay {
+  position: absolute;
+  inset: 0;
+  /*background: rgba(0, 0, 0, 0.15);*/
+  backdrop-filter: blur(2px);
+}
+.facebook-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Centrage parfait */
+  display: flex;
+  gap: 8px;
+}
+.spinner-block {
+  width: 8px;
+  height: 32px;
+  border-radius: 4px;
+  background: linear-gradient(180deg, var(--color-loader), #42a5f5);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  animation: fb-bounce 1s infinite ease-in-out;
+  transform-origin: center bottom;
+}
+.block-1 { animation-delay: 0s; }
+.block-2 { animation-delay: 0.15s; }
+.block-3 { animation-delay: 0.3s; }
+@keyframes fb-bounce {
+  0%, 100% { transform: scaleY(1); opacity: 1; }
+  50%      { transform: scaleY(0.5); opacity: 0.5; }
+}
+/* fin animation 1 */
+
+
+/*debut animation 2*/
+.anim_loader {
+    position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 60px;
+  height: 40px;
+  position: relative;
+  display: inline-block;
+  --base-color: white; /*use your base color*/
+}
+.anim_loader::before {
+  content: '';  
+  left: 0;
+  top: 0;
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: var(--color-loader);
+  background-image: radial-gradient(circle 8px at 18px 18px, var(--base-color) 100%, transparent 0), radial-gradient(circle 4px at 18px 0px, var(--base-color) 100%, transparent 0), radial-gradient(circle 4px at 0px 18px, var(--base-color) 100%, transparent 0), radial-gradient(circle 4px at 36px 18px, var(--base-color) 100%, transparent 0), radial-gradient(circle 4px at 18px 36px, var(--base-color) 100%, transparent 0), radial-gradient(circle 4px at 30px 5px, var(--base-color) 100%, transparent 0), radial-gradient(circle 4px at 30px 5px, var(--base-color) 100%, transparent 0), radial-gradient(circle 4px at 30px 30px, var(--base-color) 100%, transparent 0), radial-gradient(circle 4px at 5px 30px, var(--base-color) 100%, transparent 0), radial-gradient(circle 4px at 5px 5px, var(--base-color) 100%, transparent 0);
+  background-repeat: no-repeat;
+  box-sizing: border-box;
+  animation: rotationBack 3s linear infinite;
+}
+.anim_loader::after {
+  content: '';  
+  left: 35px;
+  top: 15px;
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: var(--color-loader);
+  background-image: radial-gradient(circle 5px at 12px 12px, var(--base-color) 100%, transparent 0), radial-gradient(circle 2.5px at 12px 0px, var(--base-color) 100%, transparent 0), radial-gradient(circle 2.5px at 0px 12px, var(--base-color) 100%, transparent 0), radial-gradient(circle 2.5px at 24px 12px, var(--base-color) 100%, transparent 0), radial-gradient(circle 2.5px at 12px 24px, var(--base-color) 100%, transparent 0), radial-gradient(circle 2.5px at 20px 3px, var(--base-color) 100%, transparent 0), radial-gradient(circle 2.5px at 20px 3px, var(--base-color) 100%, transparent 0), radial-gradient(circle 2.5px at 20px 20px, var(--base-color) 100%, transparent 0), radial-gradient(circle 2.5px at 3px 20px, var(--base-color) 100%, transparent 0), radial-gradient(circle 2.5px at 3px 3px, var(--base-color) 100%, transparent 0);
+  background-repeat: no-repeat;
+  box-sizing: border-box;
+  animation: rotationBack 4s linear infinite reverse;
+}
+@keyframes rotationBack {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-360deg);
+  }
+}  
+/*fin animation 2*/
+
+
+
+
+.magasin-card:hover {
+    transform: scale(1.08);
+    transition: 0.3s ease;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.magasin-img {
+    transition: transform 0.3s ease-in-out;
+}
+
+.magasin-card:hover .magasin-img {
+    transform: rotate(-10deg) scale(1.08);
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+
+
+#carouselMagasin.dragging {
+    cursor: grabbing;
+    user-select: none;
+}
+
+.credit-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.credit-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+
+.swal2-container {
+    backdrop-filter: blur(10px);
+    background-color: rgba(0, 0, 0, 0.3);
+}
