@@ -10,15 +10,15 @@
      <meta name="author" content="Techzaa" />
      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
      <!-- App favicon -->
-     <link rel="shortcut icon" href="assets/images/favicon.ico">
+     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}">
      <!-- Vendor css (Require in all Page) -->
-     <link href="assets/css/vendor.min.css" rel="stylesheet" type="text/css" />
+     <link href="{{ asset('assets/css/vendor.min.css') }}" rel="stylesheet" type="text/css" />
      <!-- Icons css (Require in all Page) -->
-     <link href="assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+     <link href="{{ asset('assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
      <!-- App css (Require in all Page) -->
-     <link href="assets/css/app.min.css" rel="stylesheet" type="text/css" />
+     <link href="{{ asset('assets/css/app.min.css') }}" rel="stylesheet" type="text/css" />
      <!-- Theme Config js (Require in all Page) -->
-     <script src="assets/js/config.min.js"></script>
+     <script src="{{ asset('assets/js/config.min.js') }}"></script>
 
     <script src="{{ asset('jquery-3.7.1.min.js') }} "></script>
     <script src="{{ asset('assets/app/js/url.js') }} "></script>
@@ -211,8 +211,8 @@
 
                                         <div class="dropdown-divider my-1"></div>
 
-                                        <a class="dropdown-item text-danger" href="auth-signin.html">
-                                             <iconify-icon icon="solar:logout-3-broken" class="align-middle me-2 fs-18"></iconify-icon><span class="align-middle">Logout</span>
+                                        <a class="dropdown-item text-danger btnLogout" href="{{ route('deconnecter') }}">
+                                             <iconify-icon icon="solar:logout-3-broken" class="align-middle me-2 fs-18"></iconify-icon><span class="align-middle">Se déconnecté</span>
                                         </a>
                                    </div>
                               </div>
@@ -334,8 +334,8 @@
                <!-- Sidebar Logo -->
                <div class="logo-box">
                     <a href="#" class="logo-dark">
-                         <img src="assets/images/logo-sm.png" class="logo-sm" alt="logo sm">
-                         <img src="assets/images/logo-dark.png" class="logo-lg" alt="logo dark">
+                         <img src="assets/app/images/logo.png" class="logo-sm" alt="logo sm">
+                         <img src="assets/app/images/logo.png" class="logo-lg" alt="logo dark">
                     </a>
 
                     <div href="#" class="logo-light">
@@ -360,8 +360,7 @@
                    <div class="container-fluid">
                        <div class="row">
                            <div class="col-12 text-center">
-                               <script>document.write(new Date().getFullYear())</script> &copy; Lahomes. Crafted by <iconify-icon icon="solar:hearts-bold-duotone" class="fs-18 align-middle text-danger"></iconify-icon> <a
-                                   href="https://1.envato.market/techzaa" class="fw-bold footer-text" target="_blank">Techzaa</a>
+                               DemandHub <script>document.write(new Date().getFullYear())</script> Copyright  &copy;  – Tous droits réservés. Dévélopper par DAVID Kouachi
                            </div>
                        </div>
                    </div>
@@ -370,18 +369,10 @@
      </div>
 
     <!-- Vendor Javascript (Require in all Page) -->
-    <script src="assets/js/vendor.js"></script>
+    <script src="{{ asset('assets/js/vendor.js') }}"></script>
 
     <!-- App Javascript (Require in all Page) -->
-    <script src="assets/js/app.js"></script>
-
-    <!-- Vector Map Js -->
-    <script src="assets/vendor/jsvectormap/js/jsvectormap.min.js"></script>
-    <script src="assets/vendor/jsvectormap/maps/world-merc.js"></script>
-    <script src="assets/vendor/jsvectormap/maps/world.js"></script>
-
-    <!-- Dashboard Js -->
-    {{-- <script src="assets/js/pages/dashboard-analytics.js"></script> --}}
+    <script src="{{ asset('assets/js/app.js') }}"></script>
 
     <script>
         window.themeData = "{{ base64_encode(json_encode([

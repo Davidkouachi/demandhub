@@ -230,7 +230,7 @@ $(document).ready(function () {
         // $id.hide('slow');
         $id.empty();
         $id.append(`
-            <div class="d-flex align-items-center justify-content-center" style="margin-top: -70px;">
+            <div class="d-flex align-items-center justify-content-center" style="margin-top: 0px;">
                 <div class="alert alert-success text-bg-success alert-dismissible" role="alert">
                     <i class="ri-information-line fs-14 text-white"></i>
                     <strong>${message}</strong>

@@ -82,6 +82,75 @@ $(document).ready(function () {
         return div;
     }
 
+    window.FomulaireDemdande = function () {
+        
+        const div = `        
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title mb-1 anchor">
+                                Formulaire
+                            </h5>
+                            <p class="text-muted">Veuillez renseigner tous les champs du formulaire et vérifier vos informations avant de l’envoyer.</p>
+                            <div class="mb-3">
+                                <form class="row g-3">
+
+                                    <div class="col-md-8">
+                                        <label for="objet" class="form-label">Objet de la demande</label>
+                                        <input type="text" class="form-control" id="objet" placeholder="Ex : Demande de matériel, Réclamation service..." required>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label class="form-label">Catégorie</label>
+                                        <select class="form-control" data-choices id="categorie" required>
+                                            <option value="">Choisir une catégorie...</option>
+                                            <option>Matériel</option>
+                                            <option>Ressources humaines</option>
+                                            <option>Finances</option>
+                                            <option>Service client</option>
+                                            <option>Autres</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="description" class="form-label">Description détaillée</label>
+                                        <textarea class="form-control" id="description" rows="4" placeholder="Décrivez votre demande ou réclamation..." required></textarea>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="piece_jointe" class="form-label">Pièce jointe (Image, PDF, Excel)</label>
+                                        <input class="form-control" type="file" id="piece_jointe" name="piece_jointe[]" 
+                                               accept=".jpg,.jpeg,.png,.pdf,.xls,.xlsx" multiple>
+
+                                        <!-- Conteneur pour l'aperçu -->
+                                        <div id="preview_files" class="row mt-3"></div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="validation" required>
+                                            <label class="form-check-label" for="validation">
+                                                Je confirme que toutes les informations renseignées sont exactes.
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <button class="btn btn-primary" type="submit">Envoyer la demande</button>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        return div;
+    }
+
     // ---------------------------------------------------------------------
 
     window.structureMenus = function (menus) {

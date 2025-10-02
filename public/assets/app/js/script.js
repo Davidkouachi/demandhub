@@ -95,128 +95,128 @@ $(document).ready(function () {
 
         // overDisplay(1);
 
-        function updatePassword()
-        {
-            const modalBody =`
-                <div id="updatePassword" class="modal fade" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-body">
-                                <div class="auth-brand text-center mt-n4 mb-n2 position-relative top-0">
-                                    <a href="index.html" class="logo-dark">
-                                        <span><img src="assets/app/images/logo_bg.png" alt="dark logo" height="150"></span>
-                                    </a>
-                                    <a href="index.html" class="logo-light">
-                                        <span><img src="assets/app/images/logo_bg_dark.png" alt="logo" height="150"></span>
-                                    </a>
-                                </div>
-                                <form class="ps-3 pe-3" id="formUpdatePassword">
-                                    <div class="mb-3">
-                                        <label for="password-reset" class="form-label">Nouveau mot de passe</label>
-                                        <input class="form-control" type="password" id="password-reset" placeholder="Entrer votre mot de passe">
-                                    </div>
-                                    <div class="mb-3 text-center">
-                                        <button class="btn btn-primary btn_mdp_reset" type="submit">
-                                            Mise à jour
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
+        // function updatePassword()
+        // {
+        //     const modalBody =`
+        //         <div id="updatePassword" class="modal fade" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+        //             <div class="modal-dialog modal-dialog-centered">
+        //                 <div class="modal-content">
+        //                     <div class="modal-body">
+        //                         <div class="auth-brand text-center mt-n4 mb-n2 position-relative top-0">
+        //                             <a href="index.html" class="logo-dark">
+        //                                 <span><img src="assets/app/images/logo_bg.png" alt="dark logo" height="150"></span>
+        //                             </a>
+        //                             <a href="index.html" class="logo-light">
+        //                                 <span><img src="assets/app/images/logo_bg_dark.png" alt="logo" height="150"></span>
+        //                             </a>
+        //                         </div>
+        //                         <form class="ps-3 pe-3" id="formUpdatePassword">
+        //                             <div class="mb-3">
+        //                                 <label for="password-reset" class="form-label">Nouveau mot de passe</label>
+        //                                 <input class="form-control" type="password" id="password-reset" placeholder="Entrer votre mot de passe">
+        //                             </div>
+        //                             <div class="mb-3 text-center">
+        //                                 <button class="btn btn-primary btn_mdp_reset" type="submit">
+        //                                     Mise à jour
+        //                                 </button>
+        //                             </div>
+        //                         </form>
+        //                     </div>
+        //                 </div>
+        //             </div>
+        //         </div>
+        //     `;
 
-            $('.modal').remove();
+        //     $('.modal').remove();
 
-            $('body').append(modalBody);
-            const $modal = $('#updatePassword');
-            $modal.removeAttr('aria-hidden');
-            const modal = bootstrap.Modal.getOrCreateInstance($modal[0]);
-            modal.show();
+        //     $('body').append(modalBody);
+        //     const $modal = $('#updatePassword');
+        //     $modal.removeAttr('aria-hidden');
+        //     const modal = bootstrap.Modal.getOrCreateInstance($modal[0]);
+        //     modal.show();
 
-            $("#formUpdatePassword").on("submit", function (event) {
-                event.preventDefault();
+        //     $("#formUpdatePassword").on("submit", function (event) {
+        //         event.preventDefault();
 
-                const data = {
-                    mdp: $('#password-reset').val(),
-                };
+        //         const data = {
+        //             mdp: $('#password-reset').val(),
+        //         };
 
-                // Vérification des champs obligatoires
-                if (!data.mdp.trim()) {
-                    showAlert("Alerte", "Veuillez saisir le mot de passe", "warning");
-                    return false;
-                }
+        //         // Vérification des champs obligatoires
+        //         if (!data.mdp.trim()) {
+        //             showAlert("Alerte", "Veuillez saisir le mot de passe", "warning");
+        //             return false;
+        //         }
 
-                if (!verifPassword(data.mdp)) {
-                    showAlert(
-                        "Alert",
-                        "Le mot de passe doit comporter au moins 8 caractères, une lettre majuscule, une lettre minuscule et un chiffre.",
-                        "warning"
-                    );
-                    return false;
-                }
+        //         if (!verifPassword(data.mdp)) {
+        //             showAlert(
+        //                 "Alert",
+        //                 "Le mot de passe doit comporter au moins 8 caractères, une lettre majuscule, une lettre minuscule et un chiffre.",
+        //                 "warning"
+        //             );
+        //             return false;
+        //         }
 
-                spinerButton(0, '.btn_mdp_reset', 'Mise à jour en cours');
-                overDisplay(0);
+        //         spinerButton(0, '.btn_mdp_reset', 'Mise à jour en cours');
+        //         overDisplay(0);
 
-                // Envoi via Axios
+        //         // Envoi via Axios
                 
-                axios.get(`${url_base}/refresh-csrf`)
-                .then(response => {
-                    const csrfToken = response.data.csrf_token;
+        //         axios.get(`${url_base}/refresh-csrf`)
+        //         .then(response => {
+        //             const csrfToken = response.data.csrf_token;
 
-                    // Met à jour le token dans la balise meta
-                    csrfMeta.attr('content', csrfToken);
+        //             // Met à jour le token dans la balise meta
+        //             csrfMeta.attr('content', csrfToken);
 
-                    // Configuration de l'en-tête CSRF d'Axios
-                    axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
+        //             // Configuration de l'en-tête CSRF d'Axios
+        //             axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
 
-                    // Deuxième requête : login
-                    return axios.put(url_base + '/api/UpdateMdpUser/' + user.uid, {
-                        mdp: data.mdp,
-                    });
-                })
-                .then(function (response) {
-                    spinerButton(1, '.btn_mdp_reset', 'Mise à jour');
-                    overDisplay(1);
+        //             // Deuxième requête : login
+        //             return axios.put(url_base + '/api/UpdateMdpUser/' + user.uid, {
+        //                 mdp: data.mdp,
+        //             });
+        //         })
+        //         .then(function (response) {
+        //             spinerButton(1, '.btn_mdp_reset', 'Mise à jour');
+        //             overDisplay(1);
 
-                    const res = response.data;
+        //             const res = response.data;
 
-                    if (res.success) {
-                        user.reset = 1;
-                        $('#updatePassword').modal('hide');
-                        showAlert("Alerte", res.message, "success");
+        //             if (res.success) {
+        //                 user.reset = 1;
+        //                 $('#updatePassword').modal('hide');
+        //                 showAlert("Alerte", res.message, "success");
 
-                        overDisplay(0);
-                        verifHoraire();  
+        //                 overDisplay(0);
+        //                 verifHoraire();  
 
-                    } else if (res.info) {
-                        showAlert("Alerte", res.message, "info");
-                    } else if (res.warning) {
-                        showAlert("Alerte", res.message, "warning");
-                        console.log(res.error);
-                    } else if (res.error) {
-                        showAlert("Alerte", res.message, "danger");
-                    } else {
-                        showAlert("Alerte", msg, "danger");
-                    }
+        //             } else if (res.info) {
+        //                 showAlert("Alerte", res.message, "info");
+        //             } else if (res.warning) {
+        //                 showAlert("Alerte", res.message, "warning");
+        //                 console.log(res.error);
+        //             } else if (res.error) {
+        //                 showAlert("Alerte", res.message, "danger");
+        //             } else {
+        //                 showAlert("Alerte", msg, "danger");
+        //             }
 
-                })
-                .catch(function (error) {
-                    spinerButton(1, '.btn_mdp_reset', 'Mise à jour');
-                    overDisplay(1);
+        //         })
+        //         .catch(function (error) {
+        //             spinerButton(1, '.btn_mdp_reset', 'Mise à jour');
+        //             overDisplay(1);
 
-                    let er;
-                    if (error.response && error.response.data && error.response.data.message) {
-                        er = error.response.data.message;
-                    }
-                    showAlert("Erreur", msg, "error");
-                    console.error("Erreur Axios :", error);
-                });
+        //             let er;
+        //             if (error.response && error.response.data && error.response.data.message) {
+        //                 er = error.response.data.message;
+        //             }
+        //             showAlert("Erreur", msg, "error");
+        //             console.error("Erreur Axios :", error);
+        //         });
 
-            });
-        }
+        //     });
+        // }
 
         // Charger le script global UNE fois
         // if (!window.globalScriptLoaded) {
@@ -281,7 +281,10 @@ $(document).ready(function () {
     function loadScriptForPage(page) {
         const scriptMap = {
             tableau_de_bord: [
-                url_base + "/assets/app/js/tableau_de_bord/index.js",
+                url_base + "/assets/app/js/pages/tableau_de_bord/index.js",
+            ],
+            creer_demande: [
+                url_base + "/assets/app/js/pages/mes_demandes/creer_demande.js",
             ],
         };
 

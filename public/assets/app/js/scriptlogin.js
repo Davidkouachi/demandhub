@@ -100,8 +100,8 @@ $(document).ready(function () {
         
         const pageContent = (page === 'Login') ? loginPage : (page === 'password_oublier') ? passwordPage : loginPage;
 
-        appContenu.hide('slow').empty(); // suppression immédiate de l'affichage
-        appContenu.html(pageContent).show('slow'); // remplacement et réaffichage immédiats
+        appContenu.empty(); // suppression immédiate de l'affichage
+        appContenu.html(pageContent); // remplacement et réaffichage immédiats
 
     }
 

@@ -46,6 +46,34 @@ class AuthController extends Controller
 
         if ($user) {
 
+            // Récupérer la dernière session de l'utilisateur
+            $lastSession = DB::table('sessions')
+                ->where('user_id', $user->id)
+                ->latest('last_activity')
+                ->first();
+
+            // Vérifier s'il y a une session
+            if ($lastSession) {
+                $last_activity = $lastSession->last_activity; // typiquement un timestamp UNIX
+
+                // Temps actuel en secondes
+                $now = time();
+
+                // Calcul de la différence en secondes
+                $diff = $now - $last_activity;
+
+                // Si l'utilisateur s'est connecté récemment (ex: il y a moins de 10 minutes)
+                if ($diff <= 600) { // 600 secondes = 10 minutes
+                    return response()->json([
+                        'user_connecter' => true,
+                        'message' => 'Ce compte est déjà connecté sur un autre ordinateur, déconnectez-vous ou patientez 10 minutes et réessayez.'
+                    ]);
+                }
+
+                // Sinon : session expirée → on la supprime (optionnel)
+                DB::table('sessions')->where('user_id', $user->id)->delete();
+            }
+
             // verifier si l'user n'a pas ete supprimer
             $controle1 = DB::table('users')->where('suppr', true)->where('id', $user->id)->first();
             if ($controle1) {
@@ -87,31 +115,6 @@ class AuthController extends Controller
             if (Hash::check($password, $user->password)) {
 
                 Auth::loginUsingId($user->id, $remember);
-
-                // Récupérer les sessions du user
-                $nbreSessions= DB::table('sessions')->where('user_id', $user->id)->count();
-
-                // Vérifier s'il y a une session
-                if ($nbreSessions) {
-                    $last_activity = $nbreSessions->last_activity; // typiquement un timestamp UNIX
-
-                    // Temps actuel en secondes
-                    $now = time();
-
-                    // Calcul de la différence en secondes
-                    $diff = $now - $last_activity;
-
-                    // Si l'utilisateur s'est connecté récemment (ex: il y a moins de 10 minutes)
-                    if ($diff <= 600) { // 600 secondes = 10 minutes
-                        return response()->json([
-                            'user_connecter' => true,
-                            'message' => 'Ce compte est déjà connecté sur un autre ordinateur, déconnectez-vous ou patientez 10 minutes et réessayez.'
-                        ]);
-                    }
-
-                    // Sinon : session expirée → on la supprime (optionnel)
-                    DB::table('sessions')->where('user_id', $user->id)->delete();
-                }
 
                 return response()->json(['success' => true, 'message' => 'Compte connecté']);
             }

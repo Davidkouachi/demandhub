@@ -218,3 +218,61 @@ html, body {
     backdrop-filter: blur(10px);
     background-color: rgba(0, 0, 0, 0.3);
 }
+
+
+
+
+
+
+
+
+
+
+
+/*renderPreviewFiles*/
+.file-card {
+    position: relative;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+    transition: box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 150px; /* Hauteur fixe pour toutes les cards */
+}
+
+.file-card:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.btn-remove {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    display: none;
+}
+
+.file-card:hover .btn-remove {
+    display: block;
+}
+
+.file-icon {
+    font-size: 2rem;
+    margin-bottom: 5px;
+    flex-shrink: 0;
+}
+
+.file-name {
+    font-size: 0.9rem;
+    word-break: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Limite à 3 lignes */
+    -webkit-box-orient: vertical;
+    flex-grow: 1;
+}
+renderPreviewFiles
