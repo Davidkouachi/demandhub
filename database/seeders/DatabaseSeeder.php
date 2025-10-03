@@ -74,7 +74,7 @@ class DatabaseSeeder extends Seeder
 
         # Menus parents (niveau 1)
         $menus = [
-            ['id' => 1, 'name' => 'Tableau de bord', 'slug' => 'dashboard', 'icon' => 'ri-dashboard-2-line', 'is_dropdown' => false, 'parent_id' => null, 'order' => 1, 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 1, 'name' => 'Tableau de bord', 'slug' => 'tableau_de_bord', 'icon' => 'ri-dashboard-2-line', 'is_dropdown' => false, 'parent_id' => null, 'order' => 1, 'created_at' => now(), 'updated_at' => now()],
 
             // Demandes & réclamations
             ['id' => 2, 'name' => 'Mes demandes', 'slug' => 'mes_demandes', 'icon' => 'ri-file-list-line', 'is_dropdown' => true, 'parent_id' => null, 'order' => 2, 'created_at' => now(), 'updated_at' => now()],

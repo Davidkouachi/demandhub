@@ -286,6 +286,9 @@ $(document).ready(function () {
             creer_demande: [
                 url_base + "/assets/app/js/pages/mes_demandes/creer_demande.js",
             ],
+            demandes_cours: [
+                url_base + "/assets/app/js/pages/mes_demandes/demandes_cours.js",
+            ],
         };
 
         // Supprimer tous les scripts déclarés dans le scriptMap

@@ -46,7 +46,7 @@ $(document).ready(function() {
                 var $icon = $('<div class="file-icon"></div>').text(getFileIcon(file));
                 var $name = $('<div class="file-name"></div>').text(file.name);
 
-                var $btn = $('<button type="button" class="btn btn-sm btn-danger btn-remove">✖</button>');
+                var $btn = $('<button type="button" class="btn btn-sm btn-outline-danger btn-remove rounded-pill">✖</button>');
                 $btn.on('click', function() {
                     filesArray.splice(index, 1);
                     renderPreview();

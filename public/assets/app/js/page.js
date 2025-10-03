@@ -151,6 +151,38 @@ $(document).ready(function () {
         return div;
     }
 
+    window.ListeDemdandesCours = function () {
+        
+        const div = `        
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title anchor mb-1" id="overview">
+                                Liste des demandes en cours 
+                                <a class="btn btn-sm btn-outline-warning rounded-2 float-end" href="#">
+                                    <iconify-icon icon="mdi:reload" class="align-middle fs-18 rounded-pill"></iconify-icon>
+                                </a>
+                            </h5>
+                            <p class="sub-header">
+                                Les demandes affichées ci-dessous sont celles actuellement en traitement. 
+                                Vous pouvez actualiser la liste avec le bouton ci-dessus à droite.
+                            </p>
+
+                            <div>
+                                <div class="py-3">
+                                    <div id="tableData"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        return div;
+    }
+
     // ---------------------------------------------------------------------
 
     window.structureMenus = function (menus) {
