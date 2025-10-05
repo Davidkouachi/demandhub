@@ -128,8 +128,8 @@ $(document).ready(function () {
                                     </div>
 
                                     <div class="col-12">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="validation" required>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" role="switch" id="validation">
                                             <label class="form-check-label" for="validation">
                                                 Je confirme que toutes les informations renseignées sont exactes.
                                             </label>
@@ -151,29 +151,125 @@ $(document).ready(function () {
         return div;
     }
 
-    window.ListeDemdandesCours = function () {
+    window.ListeMesDemdandesEnCours = function () {
         
         const div = `        
             <div class="row">
                 <div class="col-12">
                     <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title anchor mb-1" id="overview">
-                                Liste des demandes en cours 
-                                <a class="btn btn-sm btn-outline-warning rounded-2 float-end" href="#">
-                                    <iconify-icon icon="mdi:reload" class="align-middle fs-18 rounded-pill"></iconify-icon>
-                                </a>
-                            </h5>
-                            <p class="sub-header">
-                                Les demandes affichées ci-dessous sont celles actuellement en traitement. 
-                                Vous pouvez actualiser la liste avec le bouton ci-dessus à droite.
-                            </p>
-
+                        <div class="card-header d-flex justify-content-between align-items-center border-bottom">
                             <div>
-                                <div class="py-3">
-                                    <div id="tableData"></div>
+                                <h4 class="card-title">
+                                    Liste des demandes en cours
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="card-header d-flex justify-content-between align-items-center border-bottom">
+                            <div>
+                                <input type="text" id="searchInput" class="form-control form-control-sm" placeholder="Rechercher...">
+                            </div>
+                            <div>
+                                <a class="btn btn-outline-warning rounded-pill btnActualiser">
+                                    Actualiser
+                                    <i class="ri-refresh-line"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table align-middle text-nowrap table-hover table-centered mb-0" id="agentTable">
+                                    <thead class="bg-light-subtle">
+                                        <tr>
+                                            <th>N°</th>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Contact</th>
+                                            <th>Experience</th>
+                                            <th>Date</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination justify-content-end mb-0" id="pagination"></ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        return div;
+    }
+
+    window.ListeMesDemdandes = function () {
+        
+        const div = `        
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center border-bottom">
+                            <div>
+                                <h4 class="card-title">
+                                    Historique des demandes
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="card-header d-flex justify-content-between align-items-center border-bottom">
+                            <div>
+                                <div class="app-search me-auto">
+                                   <div class="position-relative">
+                                        <input type="search" id="searchInput" class="form-control form-control-sm border-1 rounded-3" placeholder="Rechercher..." autocomplete="off" value="">
+                                        <i class="ri-search-line search-widget-icon"></i>
+                                   </div>
+                              </div>
+                            </div>
+                            <div>
+                                <a class="btn btn-outline-warning rounded-pill btnActualiser">
+                                    Actualiser
+                                    <i class="ri-refresh-line"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-header border-bottom">
+                            <div class="row g-3 paraTable" >
+                                <div class="col-md-3">
+                                    <label class="form-label">Statut</label>
+                                    <select class="form-control" data-choices id="statut">
+                                        <option selected value="0">Tout</option>
+                                        <option value="Active" >Active</option>
+                                        <option value="Inactive" >Inactive</option>
+                                    </select>
                                 </div>
                             </div>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table align-middle text-nowrap table-hover table-centered mb-0" id="tableDemande">
+                                    <thead class="bg-light-subtle">
+                                        <tr>
+                                            <th>N°</th>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Contact</th>
+                                            <th>Experience</th>
+                                            <th>Date</th>
+                                            <th>Status</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination justify-content-end mb-0" id="pagination"></ul>
+                            </nav>
                         </div>
                     </div>
                 </div>
@@ -223,11 +319,13 @@ $(document).ready(function () {
                             </li>
                         `);
 
-                        // Ajouter les sous-menus
+                        // Ajouter les sous-menus avec id unique
                         menu.submenus.forEach(submenu => {
+                            const subMenuId = `submenu-${submenu.data_data || submenu.slug || Math.random().toString(36).substr(2,5)}`;
+
                             const subMenuItem = $(`
                                 <li class="sub-nav-item">
-                                    <a class="sub-nav-link" href="${submenu.href}" title="${submenu.title}" data-page="${submenu.data_page}" data-data="${submenu.data_data}">
+                                    <a class="sub-nav-link" id="${subMenuId}" href="${submenu.href}" title="${submenu.title}" data-page="${submenu.data_page}">
                                         ${submenu.name}
                                     </a>
                                 </li>
@@ -238,9 +336,11 @@ $(document).ready(function () {
                         menuContainer.append(menuItem);
                     } else {
                         // Menu simple sans sous-menu
+                        const menuId = `menu-${menu.data_data || menu.slug || Math.random().toString(36).substr(2,5)}`;
+
                         const menuItem = $(`
                             <li class="nav-item">
-                                <a class="nav-link" href="${menu.href}" title="${menu.title}" data-page="${menu.data_page}" data-data="${menu.data_data}">
+                                <a class="nav-link" id="${menuId}" href="${menu.href}" title="${menu.title}" data-page="${menu.data_page}">
                                     <span class="nav-icon">
                                         <i class="${menu.icon}"></i>
                                     </span>
@@ -256,6 +356,7 @@ $(document).ready(function () {
             resolve();
         });
     };
+
 
 
 });

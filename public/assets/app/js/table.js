@@ -1,67 +1,171 @@
 $(document).ready(function() {
 
-	window.TableData = function (id, columns, data) {
-	    const $id = $(id);
+	// Fonction globale de chargement
+	window.loadingTable = function(callback, duration = 2000, id, page) {
 
-	    if ($id.length) {
-	        new gridjs.Grid({
-			    columns: columns,
-			    data: data,
-			    pagination: { limit: 5 },
-			    sort: true,
-			    search: { enabled: true }, // ou juste `search: true`
-			    language: {
-			        search: {
-			            placeholder: 'Rechercher dans le tableau...'
-			        },
-			        pagination: {
-			            previous: 'Précédent',
-			            next: 'Suivant',
-			            format: (start, end, total) => `Affichage de ${start} à ${end} sur ${total} résultats`,
-			            showing: 'Affichage de',
-			            results: () => 'résultats',
-			        },
-			        noRecordsFound: 'Aucun résultat trouvé',
-			        loading: 'Chargement...',
-			    }
-			}).render($id[0]);
-	    }
+		$(page).empty();
+		const $tableBody = $(id + " tbody");
+		const colspan = $(id + " thead th").length;
+	    $tableBody.empty().append(`
+	    	<tr>
+                <td colspan="${colspan}" class="text-center text-danger py-3">
+                    <button class="btn btn-warning me-1" type="button" disabled>
+					    <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+					    Chargement de données...
+					</button>
+                </td>
+            </tr>
+	    `);
+
+	    // Après "duration" ms, on supprime le loader et on exécute la callback
+	    setTimeout(() => {
+	        $tableBody.empty();
+	        if (typeof callback === "function") {
+	            callback();
+	        }
+	    }, duration);
 	};
 
-	// ----------------------------------------------------------------
+    window.renderDynamicTable = function(tableId, statutSelect = null, searchInputId, paginationId, rowRenderer, data) {
+	    const $tableBody = $(tableId + " tbody");
+	    const $pagination = $(paginationId);
+	    const $searchInput = $(searchInputId);
+	    const $statutSelect = $(statutSelect);
 
-	window.ListDemandeCours = function (id) {
-	    const columns = [
-		    { name: "ID", selector: row => row.id, formatter: e => gridjs.html('<span class="fw-semibold">' + e + '</span>') },
-		    { name: "Nom", selector: row => row.nom },
-		    { name: "Email", selector: row => row.email, formatter: e => gridjs.html('<a href="mailto:' + e + '">' + e + '</a>') },
-		    { name: "Position", selector: row => row.position },
-		    { name: "Company", selector: row => row.company },
-		    {
-		        name: "Actions",
-		        width: "120px",
-		        formatter: (cell, row) => gridjs.html(`
-		            <a class="btn btn-soft-primary btn-sm btn-view-row" data-row='${JSON.stringify(row)}'>
-		                <iconify-icon icon="solar:pen-2-broken" class="align-middle fs-18 rounded-pill"></iconify-icon>
-		            </a>
-		        `)
-		    }
-		];
+	    let filteredData = [...data];
+	    let currentPage = 1;
+	    const rowsPerPage = 10;
 
-	    const data = [
-	        ["1", "Alice", "alice@example.com", "Software Engineer", "ABC Company", "United States"],
-	        ["2", "Bob", "bob@example.com", "Product Manager", "XYZ Inc", "Canada"],
-	        ["3", "Charlie", "charlie@example.com", "Data Analyst", "123 Corp", "Australia"],
-	        ["4", "David", "david@example.com", "UI/UX Designer", "456 Ltd", "United Kingdom"],
-	        ["5", "Eve", "eve@example.com", "Marketing Specialist", "789 Enterprises", "France"],
-	        ["6", "Frank", "frank@example.com", "HR Manager", "ABC Company", "Germany"],
-	        ["7", "Grace", "grace@example.com", "Financial Analyst", "XYZ Inc", "Japan"],
-	        ["8", "Hannah", "hannah@example.com", "Sales Representative", "123 Corp", "Brazil"],
-	        ["9", "Ian", "ian@example.com", "Software Developer", "456 Ltd", "India"],
-	        ["10", "Jane", "jane@example.com", "Operations Manager", "789 Enterprises", "China"]
-	    ];
+	    function renderTable() {
+	        $tableBody.empty();
 
-	    TableData(id, columns, data);
+	        if (!filteredData.length) {
+	            const colspan = $(tableId + " thead th").length;
+	            $tableBody.append(`
+	                <tr>
+	                    <td colspan="${colspan}" class="text-center text-danger py-3">
+	                        Aucun résultat trouvé
+	                    </td>
+	                </tr>
+	            `);
+	            $pagination.empty();
+	            return;
+	        }
+
+	        const start = (currentPage - 1) * rowsPerPage;
+	        const end = start + rowsPerPage;
+	        const pageData = filteredData.slice(start, end);
+
+	        $.each(pageData, function(index, item) {
+	            const trHtml = rowRenderer(item, index, start);
+	            $tableBody.append(trHtml);
+	        });
+
+	        renderPagination();
+	    }
+
+	    function renderPagination() {
+	        $pagination.empty();
+	        const pageCount = Math.ceil(filteredData.length / rowsPerPage);
+	        if (pageCount <= 1) return;
+
+	        const maxVisible = 5;
+	        const createPageLi = (num, isActive = false) => {
+	            const li = $(`<li class="page-item ${isActive ? 'active' : ''}"><a class="page-link" href="javascript:void(0)">${num}</a></li>`);
+	            li.on("click", function() { currentPage = num; renderTable(); });
+	            return li;
+	        };
+
+	        const prevLi = $(`<li class="page-item ${currentPage === 1 ? 'disabled' : ''}"><a class="page-link" href="javascript:void(0)">Précédent</a></li>`);
+	        prevLi.on("click", function() { if (currentPage > 1) { currentPage--; renderTable(); } });
+	        $pagination.append(prevLi);
+
+	        if (pageCount <= maxVisible) {
+	            for (let i = 1; i <= pageCount; i++) {
+	                $pagination.append(createPageLi(i, currentPage === i));
+	            }
+	        } else {
+	            const visiblePages = [];
+	            if (currentPage <= 3) visiblePages.push(1,2,3,'...',pageCount-1,pageCount);
+	            else if (currentPage >= pageCount-2) visiblePages.push(1,2,'...',pageCount-2,pageCount-1,pageCount);
+	            else visiblePages.push(1,'...',currentPage-1,currentPage,currentPage+1,'...',pageCount);
+
+	            visiblePages.forEach(p => {
+	                if (p === '...') $pagination.append(`<li class="page-item disabled"><a class="page-link" href="#">...</a></li>`);
+	                else $pagination.append(createPageLi(p, currentPage === p));
+	            });
+	        }
+
+	        const nextLi = $(`<li class="page-item ${currentPage === pageCount ? 'disabled' : ''}"><a class="page-link" href="javascript:void(0)">Suivant</a></li>`);
+	        nextLi.on("click", function() { if (currentPage < pageCount) { currentPage++; renderTable(); } });
+	        $pagination.append(nextLi);
+	    }
+
+	    // Fonction unique pour appliquer les filtres
+	    function applyFilters() {
+	        const query = $searchInput.val().toLowerCase();
+	        const statutValue = ($statutSelect && $statutSelect.length) ? $statutSelect.val() : "0";
+
+	        filteredData = data.filter(item => {
+	            // Recherche globale
+	            const matchSearch = Object.values(item).some(val => String(val).toLowerCase().includes(query));
+	            
+	            // Filtrage par statut
+	            let matchStatut = true;
+	            if (statutValue !== "0") matchStatut = item.status === statutValue;
+
+	            return matchSearch && matchStatut;
+	        });
+
+	        currentPage = 1;
+	        renderTable();
+	    }
+
+	    // Appliquer immédiatement
+	    applyFilters();
+
+	    // Événements
+	    $searchInput.on("input", applyFilters);
+	    if ($statutSelect && $statutSelect.length) $statutSelect.on("change", applyFilters);
+	};
+
+	// Fonction globale pour afficher un "modal custom"
+	window.showDynamicActionModal = function(data = {}, buttons = []) {
+	    const uniqueId = "customActionBox_" + Date.now();
+
+	    const overlayHtml = `
+	        <div class="custom-overlay" id="${uniqueId}">
+	            <div class="custom-box">
+	                <div class="d-flex flex-column gap-2" id="${uniqueId}_body">
+	                    <!-- Boutons dynamiques -->
+	                </div>
+	            </div>
+	        </div>
+	    `;
+
+	    $('body').append(overlayHtml);
+
+	    const $overlay = $(`#${uniqueId}`);
+	    const $boxBody = $(`#${uniqueId}_body`);
+
+	    // Ajouter dynamiquement les boutons
+	    buttons.forEach(btn => {
+	        const $b = $(`
+	            <a href="#" class="btn ${btn.class} d-flex align-items-center gap-2" data-id="${data.id}">
+	                <i class="${btn.icon}"></i> ${btn.text}
+	            </a>
+	        `);
+	        $boxBody.append($b);
+	    });
+
+	    // Clic à l’extérieur pour fermer
+	    $overlay.on("click", function(e) {
+	        if ($(e.target).is($overlay)) {
+	            $overlay.remove();
+	        }
+	    });
+
+	    return $overlay; // on retourne l'overlay pour l'utiliser ailleurs
 	};
 
 });

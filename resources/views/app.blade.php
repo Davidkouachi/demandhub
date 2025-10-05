@@ -9,10 +9,10 @@
      <meta name="description" content="A fully responsive premium admin dashboard template, Real Estate Management Admin Template" />
      <meta name="author" content="Techzaa" />
      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+     <meta http-equiv="Permissions-Policy" content="fullscreen=(self)">
+
      <!-- App favicon -->
      <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}">
-     <!-- Gridjs Plugin css -->
-    <link href="{{ asset('assets/vendor/gridjs/theme/mermaid.min.css') }}" rel="stylesheet" type="text/css" />
      <!-- Vendor css (Require in all Page) -->
      <link href="{{ asset('assets/css/vendor.min.css') }}" rel="stylesheet" type="text/css" />
      <!-- Icons css (Require in all Page) -->
@@ -376,9 +376,6 @@
 
     <!-- App Javascript (Require in all Page) -->
     <script src="{{ asset('assets/js/app.js') }}"></script>
-
-    <!-- Gridjs Plugin js -->
-    <script src="assets/vendor/gridjs/gridjs.umd.js"></script>
 
     <script>
         window.themeData = "{{ base64_encode(json_encode([

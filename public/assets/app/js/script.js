@@ -4,23 +4,17 @@ $(document).ready(function () {
     // loadPageFromUrl();
     init();
 
-    function init()
-    {
-
+    function init() {
         if (menuRole.length > 0) {
-
             renderMenus(menuRole, nomRole).then(() => {
                 loadPageFromUrl();
             });
-
         } else {
-
-            const page = 'tableau_de_bord'
-            const $btn = $(`[data-data="${page}"]`);
-            $btn.trigger("click");
-            
+            $btn = $('#menu-tableau_de_bord');
+            if ($btn.length) {
+                $btn.trigger("click");
+            }
         }
-
     }
 
     function pageLoader(dataPage)
@@ -253,22 +247,23 @@ $(document).ready(function () {
     }
 
     function loadPageFromUrl() {
-        let page = getPageFromUrl();
-        let defaultPage = 'tableau_de_bord';
-        let savedPage = null;
+        let page = getPageFromUrl();          // Récupère la page depuis l'URL
+        const defaultPage = 'tableau_de_bord';
 
-        // Si page invalide ou absente
+        // Si page invalide ou absente, on prend la valeur par défaut
         if (!page) {
-            // savedPage = localStorage.getItem("lastVisitedPage");
-
-            // page = savedPage || defaultPage;
-            page = page || defaultPage;
+            page = defaultPage;
             const newUrl = `/?page=${page}`;
             window.history.replaceState({ page }, "", newUrl);
         }
 
-        // showPage(page, false);
-        const $btn = $(`[data-data="${page}"]`);
+        console.log("Page demandée :", page);
+
+        // Chercher le lien correspondant dans le menu principal ou sous-menu
+        let $btn = $(`#menu-${page}`);
+        if (!$btn.length) {
+            $btn = $(`#submenu-${page}`);
+        }
 
         if ($btn.length) {
             $btn.trigger("click");
@@ -278,16 +273,21 @@ $(document).ready(function () {
         }
     }
 
+
     function loadScriptForPage(page) {
         const scriptMap = {
             tableau_de_bord: [
                 url_base + "/assets/app/js/pages/tableau_de_bord/index.js",
             ],
             creer_demande: [
+                url_base + "/assets/app/librairies/sheetjs/xlsx.full.min.js",
                 url_base + "/assets/app/js/pages/mes_demandes/creer_demande.js",
             ],
             demandes_cours: [
                 url_base + "/assets/app/js/pages/mes_demandes/demandes_cours.js",
+            ],
+            demandes_historique: [
+                url_base + "/assets/app/js/pages/mes_demandes/demandes_historique.js",
             ],
         };
 
@@ -315,22 +315,21 @@ $(document).ready(function () {
     }
 
     // Gestion du clic sur tous les liens avec data-data (même sous-menu)
-    $(document).on("click", "[data-data]", function(e) {
+    $(document).on("click", ".globalMenu [id^='menu-'], .globalMenu [id^='submenu-']", function(e) {
         e.preventDefault();
 
-        overDisplay(0);
-
+        const $menuContainer = $(".globalMenu");
         const $clicked = $(this);
 
-        // 1. Nettoyer tous les actifs
-        $("li.nav-item, li.sub-nav-item").removeClass("active");
-        $("a.nav-link, a.sub-nav-link, a.menu-arrow").removeClass("active subdrop").attr("aria-expanded", "false");
-        $(".collapse").removeClass("show");
+        // 1. Nettoyer tous les actifs dans ce menu seulement
+        $menuContainer.find("li.nav-item, li.sub-nav-item").removeClass("active");
+        $menuContainer.find("a.nav-link, a.sub-nav-link, a.menu-arrow").removeClass("active subdrop").attr("aria-expanded", "false");
+        $menuContainer.find(".collapse").removeClass("show");
 
-        // 2. Mettre active sur le lien cliqué
+        // 2. Mettre actif le lien cliqué
         $clicked.addClass("active");
 
-        // 3. Mettre active sur le li parent du lien cliqué
+        // 3. Mettre actif le li parent du lien cliqué
         $clicked.closest("li.nav-item, li.sub-nav-item").addClass("active");
 
         // 4. Vérifier si c’est un sous-menu
@@ -360,11 +359,12 @@ $(document).ready(function () {
             title: titre,
             stitle: stitre,
             url: $clicked.attr("href"),
-            data: $clicked.data("data"),
+            id: $clicked.attr("id"),
             breadcrumbItems: breadcrumb,
             updateHistory: true,
         });
     });
+
 
     function extractMenuInfo($clickedLink) {
         // Vérifier si le lien est dans un sous-menu
@@ -416,9 +416,24 @@ $(document).ready(function () {
 
         confirmAction('Déconnexion', 'Voulez-vous vraiment vous déconnecter ?').then((result) => {
             if (result.isConfirmed) {
-                // Ton code à exécuter avant la déconnexion
-                $('#sidenav-size-fullscreen').click();
-                window.location.href = $(this).attr('href');
+                // window.location.href = $(this).attr('href');
+
+                const ModalDeco = `
+                    <div id="preloaderLogout" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                        background: rgba(255,255,255,0.8); z-index: 9999; display: flex; align-items: center; justify-content: center;">
+                        <div style="text-align: center;">
+                            <div class="spinner-border text-danger" role="status"></div>
+                            <p style="margin-top: 10px; font-weight: bold;">Déconnexion en cours...</p>
+                        </div>
+                    </div>`;
+
+                // Ajoute le préloader
+                $('body').append(ModalDeco);
+
+                // Optionnel : petit délai pour voir le préloader
+                setTimeout(function () {
+                    window.location.href = $('.btnLogout').attr('href');
+                }, 1000);
             }
         });
     });

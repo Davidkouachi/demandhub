@@ -231,48 +231,50 @@ html, body {
 
 /*renderPreviewFiles*/
 .file-card {
-    position: relative;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 10px;
-    margin-bottom: 10px;
-    text-align: center;
-    transition: box-shadow 0.2s;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 150px; /* Hauteur fixe pour toutes les cards */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-
 .file-card:hover {
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transform: scale(1.05);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
 }
-
-.btn-remove {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    display: none;
+.file-preview {
+    width: 100px;              /* largeur fixe */
+    height: 100px;             /* hauteur fixe */
+    display: flex;
+    justify-content: center;   /* centrer horizontalement */
+    align-items: center;       /* centrer verticalement */
+    overflow: hidden;          /* cache ce qui dépasse */
+    margin: 0 auto 8px;        /* centre la preview dans la carte */
+    border-radius: 6px;
+    background-color: #f9f9f9; /* optionnel : fond clair pour contraste */
 }
-
-.file-card:hover .btn-remove {
-    display: block;
-}
-
-.file-icon {
-    font-size: 2rem;
-    margin-bottom: 5px;
-    flex-shrink: 0;
-}
-
 .file-name {
-    font-size: 0.9rem;
-    word-break: break-word;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 3; /* Limite à 3 lignes */
-    -webkit-box-orient: vertical;
-    flex-grow: 1;
+    font-size: 0.8rem;
+    word-wrap: break-word;
 }
+
 /*renderPreviewFiles*/
+
+
+/*divbtnTable*/
+.custom-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1050;
+}
+
+.custom-box {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    min-width: 220px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+}
+/*divbtnTable*/
+
+
