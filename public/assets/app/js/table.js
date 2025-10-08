@@ -1,29 +1,29 @@
 $(document).ready(function() {
 
 	// Fonction globale de chargement
-	window.loadingTable = function(callback, duration = 2000, id, page) {
+	window.loadingTable = function(id, page, mode) {
 
-		$(page).empty();
-		const $tableBody = $(id + " tbody");
-		const colspan = $(id + " thead th").length;
-	    $tableBody.empty().append(`
-	    	<tr>
-                <td colspan="${colspan}" class="text-center text-danger py-3">
-                    <button class="btn btn-warning me-1" type="button" disabled>
-					    <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-					    Chargement de données...
-					</button>
-                </td>
-            </tr>
-	    `);
+		if (mode == 1) {
 
-	    // Après "duration" ms, on supprime le loader et on exécute la callback
-	    setTimeout(() => {
-	        $tableBody.empty();
-	        if (typeof callback === "function") {
-	            callback();
-	        }
-	    }, duration);
+			$(page).empty();
+			const $tableBody = $(id + " tbody");
+			const colspan = $(id + " thead th").length;
+		    $tableBody.empty().append(`
+		    	<tr>
+	                <td colspan="${colspan}" class="text-center text-danger py-3">
+	                    <button class="btn btn-warning me-1" type="button" disabled>
+						    <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+						    Chargement de données...
+						</button>
+	                </td>
+	            </tr>
+		    `);
+
+		} else {
+
+			$(id + " tbody").empty();
+			$(page).empty();
+		}		
 	};
 
     window.renderDynamicTable = function(tableId, statutSelect = null, searchInputId, paginationId, rowRenderer, data) {
@@ -112,7 +112,7 @@ $(document).ready(function() {
 	            
 	            // Filtrage par statut
 	            let matchStatut = true;
-	            if (statutValue !== "0") matchStatut = item.status === statutValue;
+	            if (statutValue !== "0") matchStatut = item.statut === statutValue;
 
 	            return matchSearch && matchStatut;
 	        });

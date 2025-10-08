@@ -323,4 +323,25 @@ $(document).ready(function () {
         return true;
     }
 
+    window.voixLocalIA = function(text) {
+        // Stoppe toute lecture en cours
+        window.speechSynthesis.cancel();
+
+        const utterance = new SpeechSynthesisUtterance(text);
+
+        // Assure-toi que les voix sont bien chargées
+        const setVoice = () => {
+            const voices = window.speechSynthesis.getVoices();
+            utterance.voice = voices.find(v => v.lang === 'fr-FR') || voices[0];
+            window.speechSynthesis.speak(utterance);
+        };
+
+        // Si les voix ne sont pas encore disponibles, on attend l’événement
+        if (window.speechSynthesis.getVoices().length === 0) {
+            window.speechSynthesis.onvoiceschanged = setVoice;
+        } else {
+            setVoice();
+        }
+    };
+
 });

@@ -5,6 +5,7 @@
      <!-- Title Meta -->
      <meta charset="utf-8" />
      <title>Analytics | Lahomes - Real Estate Management Admin Template</title>
+     <meta name="csrf-token" content="{{ csrf_token() }}">
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
      <meta name="description" content="A fully responsive premium admin dashboard template, Real Estate Management Admin Template" />
      <meta name="author" content="Techzaa" />
@@ -25,14 +26,13 @@
     <script src="{{ asset('jquery-3.7.1.min.js') }} "></script>
     <script src="{{ asset('assets/app/js/url.js') }} "></script>
     <script src="{{ asset('assets/app/js/varGlobal.js') }} "></script>
-    <script src="{{asset('assets/app/js/page.js')}}"></script>
-    <script src="{{ asset('assets/app/librairies/axios/dist/axios.min.js') }}"></script>
-    <script src="{{asset('assets/app/js/Datatable/init.js')}}"></script>
-    <script src="{{asset('assets/app/js/Datatable/render.js')}}"></script>
     <script src="{{asset('assets/app/js/alert.js')}}"></script>
     <script src="{{asset('assets/app/js/format.js')}}"></script>
     <script src="{{asset('assets/app/js/select.js') }}"></script>
     <script src="{{asset('assets/app/js/table.js') }}"></script>
+    <script src="{{ asset('assets/app/librairies/axios/dist/axios.min.js') }}"></script>
+    <script src="{{ asset('assets/app/js/axios.js') }} "></script>
+    <script src="{{asset('assets/app/js/page.js')}}"></script>
     <script src="{{asset('assets/app/js/script.js') }}"></script>
     <link rel="stylesheet" href="{{ asset('assets/app/css/style.css') }}">
 </head>

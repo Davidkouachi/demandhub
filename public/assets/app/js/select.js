@@ -86,7 +86,7 @@ $(document).ready(function () {
                 data.forEach(function(item) {
                     selectElement.append(
                         $('<option>', {
-                            value: item.uid,
+                            value: item.id,
                             text: item.nom
                         })
                     );

@@ -26,7 +26,7 @@ class SelectController extends Controller
     public function select_categories(Request $res)
     {
 
-        $data = DB::table('categories_demandes')->where('suppr', 0)->select('uid','service_id','nom')->get();
+        $data = DB::table('categories_demandes')->where('suppr', 0)->select('id','uid','service_id','nom')->get();
 
         return response()->json([ 
             'data' => $data,

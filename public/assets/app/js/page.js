@@ -94,16 +94,16 @@ $(document).ready(function () {
                             </h5>
                             <p class="text-muted">Veuillez renseigner tous les champs du formulaire et vérifier vos informations avant de l’envoyer.</p>
                             <div class="mb-3">
-                                <form class="row g-3">
+                                <form class="row g-3" id="formDemande">
 
                                     <div class="col-md-8">
                                         <label for="objet" class="form-label">Objet de la demande</label>
-                                        <input type="text" class="form-control" id="objet" placeholder="Ex : Demande de matériel, Réclamation service..." required>
+                                        <input type="text" class="form-control" id="objet" placeholder="Ex : Demande de matériel, Réclamation service...">
                                     </div>
 
                                     <div class="col-md-4">
                                         <label class="form-label">Catégorie</label>
-                                        <select class="form-control" data-choices id="categorie" required>
+                                        <select class="form-control" data-choices id="categorie_id">
                                             <option value="">Choisir une catégorie...</option>
                                             <option>Matériel</option>
                                             <option>Ressources humaines</option>
@@ -115,13 +115,22 @@ $(document).ready(function () {
 
                                     <div class="col-12">
                                         <label for="description" class="form-label">Description détaillée</label>
-                                        <textarea class="form-control" id="description" rows="4" placeholder="Décrivez votre demande ou réclamation..." required></textarea>
+                                        <textarea class="form-control" id="description" rows="4" placeholder="Décrivez votre demande ou réclamation..."></textarea>
                                     </div>
 
                                     <div class="col-12">
-                                        <label for="piece_jointe" class="form-label">Pièce jointe (Image, PDF, Excel)</label>
-                                        <input class="form-control" type="file" id="piece_jointe" name="piece_jointe[]" 
-                                               accept=".jpg,.jpeg,.png,.pdf,.xls,.xlsx" multiple>
+                                        <label for="piece_jointe" class="form-label">Pièce jointe (Image, PDF, Excel, Word)</label>
+
+                                        <!-- Bouton stylé -->
+                                        <div class="d-flex align-items-center">
+                                            <label class="btn btn-primary me-2 mb-0" for="piece_jointe">
+                                                <i class="ri-upload-line me-1"></i> Choisir des fichiers
+                                            </label>
+                                            <span id="file-chosen" class="text-muted">Aucun fichier sélectionné</span>
+                                        </div>
+
+                                        <input class="form-control d-none" type="file" id="piece_jointe" name="piece_jointe[]" 
+                                               accept=".jpg,.jpeg,.png,.pdf,.xls,.xlsx,.doc,.docx" multiple>
 
                                         <!-- Conteneur pour l'aperçu -->
                                         <div id="preview_files" class="row mt-3"></div>
@@ -137,7 +146,7 @@ $(document).ready(function () {
                                     </div>
 
                                     <div class="col-12">
-                                        <button class="btn btn-primary" type="submit">Envoyer la demande</button>
+                                        <button class="btn btn-primary btnForm" type="submit">Envoyer la demande</button>
                                     </div>
                                 </form>
 
@@ -178,15 +187,15 @@ $(document).ready(function () {
                         <div class="card-body p-0">
                             <div class="table-responsive">
                                 <table class="table align-middle text-nowrap table-hover table-centered mb-0" id="agentTable">
-                                    <thead class="bg-light-subtle">
+                                    <thead class="table-dark">
                                         <tr>
-                                            <th>N°</th>
-                                            <th>Name</th>
-                                            <th>Email</th>
-                                            <th>Contact</th>
-                                            <th>Experience</th>
-                                            <th>Date</th>
-                                            <th>Status</th>
+                                            <th class="text-center" >N°</th>
+                                            <th class="text-center" >Name</th>
+                                            <th class="text-center" >Email</th>
+                                            <th class="text-center" >Contact</th>
+                                            <th class="text-center" >Experience</th>
+                                            <th class="text-center" >Date</th>
+                                            <th class="text-center" >Status</th>
                                         </tr>
                                     </thead>
                                     <tbody></tbody>
@@ -241,25 +250,26 @@ $(document).ready(function () {
                                     <label class="form-label">Statut</label>
                                     <select class="form-control" data-choices id="statut">
                                         <option selected value="0">Tout</option>
-                                        <option value="Active" >Active</option>
-                                        <option value="Inactive" >Inactive</option>
+                                        <option value="en_attente" >En attente</option>
+                                        <option value="en_cours" >En cours</option>
+                                        <option value="traitee" >Terminé</option>
+                                        <option value="rejete" >Rejété</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
                         <div class="card-body p-0">
                             <div class="table-responsive">
-                                <table class="table align-middle text-nowrap table-hover table-centered mb-0" id="tableDemande">
-                                    <thead class="bg-light-subtle">
+                                <table class="table align-middle text-nowrap table-hover table-centered mb-0" id="tableMesDemande">
+                                    <thead class="table-dark">
                                         <tr>
-                                            <th>N°</th>
-                                            <th>Name</th>
-                                            <th>Email</th>
-                                            <th>Contact</th>
-                                            <th>Experience</th>
-                                            <th>Date</th>
-                                            <th>Status</th>
-                                            <th></th>
+                                            <th class="text-center" >N°</th>
+                                            <th class="text-center" >Objet</th>
+                                            <th class="text-center" >Catégorie</th>
+                                            <th class="text-center" >Service</th>
+                                            <th class="text-center" >Statuts</th>
+                                            <th class="text-center" >Date</th>
+                                            <th class="text-center" >Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody></tbody>

@@ -58,18 +58,18 @@ $(document).ready(function() {
                     data-status="${item.status}"
                     style="cursor: pointer;"
                 >
-                    <td>${start + index + 1}</td>
-                    <td>
+                    <td class="text-center" >${start + index + 1}</td>
+                    <td class="text-center" >
                         <div class="d-flex align-items-center gap-2">
                             <div><img src="${item.photo}" alt="" class="avatar-sm rounded-circle"></div>
                             <div><a href="#!" class="text-dark fw-medium fs-15">${item.name}</a></div>
                         </div>
                     </td>
-                    <td>${item.email}</td>
-                    <td>${item.contact}</td>
-                    <td>${item.experience}</td>
-                    <td>${item.date}</td>
-                    <td>
+                    <td class="text-center" >${item.email}</td>
+                    <td class="text-center" >${item.contact}</td>
+                    <td class="text-center" >${item.experience}</td>
+                    <td class="text-center" >${item.date}</td>
+                    <td class="text-center" >
                         <span class="badge ${item.status === 'Active' ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger'} py-1 px-2 fs-13">
                             ${item.status}
                         </span>

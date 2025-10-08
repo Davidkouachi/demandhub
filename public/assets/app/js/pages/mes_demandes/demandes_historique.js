@@ -11,84 +11,106 @@ $(document).ready(function() {
 
         globalePage.append(ListeMesDemdandes());
         selectRefreshId('#statut');
-
-        loadingTable(function() {
-            tableListe();
-        }, 2000, '#tableDemande', '#pagination');
+        tableListe();
 
         $(document).on("click", ".btnActualiser", function() {
-            loadingTable(function() {
-                tableListe();
-            }, 2000, '#tableDemande', '#pagination');
+            tableListe();
         });
  
     }
 
     function tableListe() {
-        // Données de base
-        let dataTable = [
-            { id: 1, name: "Michael A. Miner", photo: "assets/images/users/avatar-2.jpg", address: "Lincoln Drive Harrisburg, PA 17101 U.S.A", email: "michaelminer@dayrep.com", contact: "+787 608-360-0464", experience: "5 Year", date: "21 May 2018", status: "Active" },
-            { id: 2, name: "Alice Johnson", photo: "assets/images/users/avatar-1.jpg", address: "New York, NY", email: "alice@example.com", contact: "+123 456 7890", experience: "3 Year", date: "15 Mar 2020", status: "Inactive" },
-            { id: 3, name: "Bob Smith", photo: "assets/images/users/avatar-3.jpg", address: "Los Angeles, CA", email: "bob@example.com", contact: "+987 654 3210", experience: "7 Year", date: "01 Jan 2015", status: "Active" }
-        ];
 
-        // Étendre les données pour remplir la table
-        const duplicationCount = 5;
-        let extendedDataTable = [];
-        for (let i = 0; i < duplicationCount; i++) {
-            dataTable.forEach(item => {
-                extendedDataTable.push({
-                    ...item,
-                    id: item.id + i * dataTable.length // ID unique
-                });
-            });
-        }
+        $('#tableMesDemande tbody').empty();
+
+        loadingTable('#tableMesDemande', '#pagination', 1);
+
+        const urlAxios = `${url}/api/ListeMesDemandes/${user.id}`;
+
+        reqAxios(0, urlAxios,'GET')
+            .then(res => {
+                if (res.success) {
+                    loadingTable('#tableMesDemande', '#pagination', 0);
+                    dataTable = res.data.data; 
+                    renderDynamicTable("#tableMesDemande", "#statut", "#searchInput", "#pagination", agentRowRenderer, dataTable);
+
+                    dataTable.forEach(item => {
+                        console.log(`Demande ID: ${item.id}, Objet: ${item.objet}, Statut: ${item.statut}`);
+
+                        // 🔹 Vérification si fichiers est un tableau
+                        if (Array.isArray(item.fichiers) && item.fichiers.length > 0) {
+                            console.log("Fichiers liés :");
+                            item.fichiers.forEach(file => {
+                                console.log(` - ${file.chemin} (${file.nom_original})`);
+                            });
+                        } else {
+                            console.log("Aucun fichier lié.");
+                        }
+                    });
+
+                } else {
+                    const colspan = $("#tableMesDemande thead th").length;
+                    $('#tableMesDemande').append(`
+                        <tr>
+                            <td colspan="${colspan}" class="text-center text-danger py-3">
+                                Aucun résultat trouvé
+                            </td>
+                        </tr>
+                    `);
+                    $('#pagination').empty();
+                }
+            }); 
 
         // Fonction de rendu des lignes
         function agentRowRenderer(item, index, start) {
             return $(`
                 <tr>
-                    <td>${start + index + 1}</td>
-                    <td>
-                        <div class="d-flex align-items-center gap-2">
-                            <div><img src="${item.photo}" alt="" class="avatar-sm rounded-circle"></div>
-                            <div><a href="#!" class="text-dark fw-medium fs-15">${item.name}</a></div>
-                        </div>
+                    <td class="text-center" >${start + index + 1}</td>
+                    <td class="text-center" >
+                        <span class="text-dark fw-medium fs-15">${item.objet}</span>
                     </td>
-                    <td>${item.email}</td>
-                    <td>${item.contact}</td>
-                    <td>${item.experience}</td>
-                    <td>${item.date}</td>
-                    <td>
-                        <span class="badge ${item.status === 'Active' ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger'} py-1 px-2 fs-13">
-                            ${item.status}
+                    <td class="text-center" >${item.categorie}</td>
+                    <td class="text-center" >${item.service}</td>
+                    <td class="text-center">
+                        <span class="badge 
+                            ${item.statut === 'en_attente' ? 'bg-warning-subtle text-warning' :
+                              item.statut === 'en_cours'   ? 'bg-primary-subtle text-primary' :
+                              item.statut === 'traitee'    ? 'bg-success-subtle text-success' :
+                              item.statut === 'rejete'     ? 'bg-danger-subtle text-danger' :
+                              'bg-secondary-subtle text-secondary'} 
+                            py-1 px-2 fs-13">
+                            ${item.statut === 'en_attente' ? 'En attente' :
+                              item.statut === 'en_cours'   ? 'En cours' :
+                              item.statut === 'traitee'    ? 'Terminé' :
+                              item.statut === 'rejete'     ? 'Rejété' :
+                              item.statut}
                         </span>
                     </td>
-                    <td>
-                        <div class="d-flex gap-2">
-                            <a href="#!" class="btn btn-light btn-sm btn-view" data-id="${item.id}">
+                    <td class="text-center" >${formatDateHeure(item.created_at)}</td>
+                    <td class="text-center" >
+                        <div class="d-flex align-items-center justify-content-center gap-2">
+                            <a href="#!" class="btn btn-light btn-sm btn-view rounded-pill" data-id="${item.id}">
                                 <i class="ri-user-6-line align-middle fs-18"></i>
                             </a>
-                            ${item.status === 'Active' ? `
-                                <a href="#!" class="btn btn-soft-primary btn-sm btn-edit" data-id="${item.id}">
+                            ${(Array.isArray(item.fichiers) && item.fichiers.length > 0) ? `
+                                <a href="#!" class="btn btn-soft-warning btn-sm btn-edit rounded-pill" data-id="${item.id}">
+                                    <i class="ri-file-line align-middle fs-18"></i>
+                                </a>
+                            ` : `` }
+                            ${item.statut == 'en_attente' ? `
+                                <a href="#!" class="btn btn-soft-primary btn-sm btn-edit rounded-pill" data-id="${item.id}">
                                     <i class="ri-pencil-line align-middle fs-18"></i>
                                 </a>
-                                <a href="#!" class="btn btn-soft-danger btn-sm btn-delete" data-id="${item.id}">
+                                <a href="#!" class="btn btn-soft-danger btn-sm btn-delete rounded-pill" data-id="${item.id}">
                                     <i class="ri-delete-bin-line align-middle fs-18"></i>
                                 </a>
-                            ` : `
-                                <a href="#!" class="btn btn-soft-success btn-sm btn-activate" data-id="${item.id}">
-                                    <i class="ri-refresh-line align-middle fs-18"></i>
-                                </a>
-                            `}
+                            ` : ` `}
+
                         </div>
                     </td>
                 </tr>
             `);
         }
-
-        // Appel du tableau dynamique
-        renderDynamicTable("#tableDemande", "#statut", "#searchInput", "#pagination", agentRowRenderer, extendedDataTable);
 
         // Désactiver les anciens événements pour éviter doublons
         $(document).off("click", ".btn-view, .btn-edit, .btn-delete, .btn-activate");
