@@ -273,21 +273,25 @@ $(document).ready(function () {
         }
     }
 
-
     function loadScriptForPage(page) {
         const scriptMap = {
             tableau_de_bord: [
                 url_base + "/assets/app/js/pages/tableau_de_bord/index.js",
             ],
+
             creer_demande: [
                 url_base + "/assets/app/librairies/sheetjs/xlsx.full.min.js",
                 url_base + "/assets/app/js/pages/mes_demandes/creer_demande.js",
             ],
-            demandes_cours: [
-                url_base + "/assets/app/js/pages/mes_demandes/demandes_cours.js",
+            mes_demandes_cours: [
+                url_base + "/assets/app/js/pages/mes_demandes/mes_demandes_cours.js",
             ],
-            demandes_historique: [
-                url_base + "/assets/app/js/pages/mes_demandes/demandes_historique.js",
+            mes_demandes_historique: [
+                url_base + "/assets/app/js/pages/mes_demandes/mes_demandes_historique.js",
+            ],
+            
+            toutes_demandes_recu: [
+                url_base + "/assets/app/js/pages/demande_recu/toutes_demandes_recu.js",
             ],
         };
 
@@ -364,7 +368,6 @@ $(document).ready(function () {
             updateHistory: true,
         });
     });
-
 
     function extractMenuInfo($clickedLink) {
         // Vérifier si le lien est dans un sous-menu

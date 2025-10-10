@@ -256,25 +256,109 @@ html, body {
 /*renderPreviewFiles*/
 
 
-/*divbtnTable*/
+
+
+
+
+
+
+
+
+
+
+/*style modal*/
 .custom-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(6px);
+    background: rgba(0, 0, 0, 0.6);
     display: flex;
-    align-items: center;
     justify-content: center;
-    z-index: 1050;
+    align-items: center;
+    z-index: 2000;
+    padding: 10px;
 }
 
 .custom-box {
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-    min-width: 220px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
 }
-/*divbtnTable*/
+
+/* 🔹 Header du modal */
+.custom-box-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background: #f7f7f7;
+    border-bottom: 1px solid #ddd;
+    border-radius: 10px 10px 0 0;
+}
+
+.custom-box-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+}
+
+/* 🔹 Bouton de fermeture rouge */
+.custom-close-btn {
+    background: #e63946;
+    border: none;
+    color: white;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.custom-close-btn:hover {
+    background: #c71c2d;
+}
+
+.custom-close-btn i {
+    font-size: 20px;
+}
+
+/* 🔹 Corps du modal */
+.custom-box-body {
+    padding: 15px;
+}
+
+/* 🔹 Tailles */
+.custom-box-xs  { width: 250px; }
+.custom-box-sm  { width: 350px; }
+.custom-box-md  { width: 500px; }
+.custom-box-lg  { width: 700px; }
+.custom-box-xl  { width: 900px; }
+.custom-box-xxl { width: 1100px; }
+.custom-box-full {
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0;
+    max-height: none;
+}
+
+/* 🔹 Responsive */
+@media (max-width: 768px) {
+    .custom-box-xs,
+    .custom-box-sm,
+    .custom-box-md,
+    .custom-box-lg,
+    .custom-box-xl,
+    .custom-box-xxl {
+        width: 95% !important;
+    }
+}
+
+
+
+
 
 

@@ -273,7 +273,7 @@ $(document).ready(function() {
 
         const urlAxios = `${url}/api/InsertDemandes/${user.id}`;
 
-        reqAxios(urlAxios,'POST',data,btnId,btnLabel,'piece_jointe')
+        reqAxios(1, urlAxios,'POST',data,btnId,btnLabel,'piece_jointe')
             .then(res => {
                 if (res.success) {
                     resetForm();

@@ -32,5 +32,21 @@ class SelectController extends Controller
             'data' => $data,
         ]);
 
+    }
+
+    public function select_traiteur_service(Request $res, $service_id)
+    {
+        $data = DB::table('users')
+                    ->where('suppr', 0)
+                    ->where('lock', 0)
+                    ->where('role_id', 3)
+                    ->where('service_id', $service_id)
+                    ->select('id','name')
+                    ->get();
+
+        return response()->json([ 
+            'data' => $data,
+        ]);
+
     } 
 }

@@ -37,9 +37,9 @@ class InsertController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'info' => true,
-                'message' => 'Formulaire non valide',
+                'msg' => 'Formulaire non valide',
                 'errors' => $validator->errors()
-            ], 422);
+            ], 201);
         }
 
         DB::beginTransaction();
@@ -97,6 +97,7 @@ class InsertController extends Controller
                         'demande_uid' => $demandeUid, // 🔗 pour relier le fichier à la demande
                         'nom_original' => $fichier->getClientOriginalName(),
                         'chemin' => $chemin,
+                        'url' => url(Storage::url($chemin)), // 🔥 URL publique directement disponible
                         'type' => $dossier,
                         'created_at' => now(),
                         'updated_at' => now(),
@@ -116,15 +117,80 @@ class InsertController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Demande enregistrée avec succès ✅'
-            ], 201);
+                'msg' => 'Demande enregistrée avec succès ✅'
+            ], 200);
 
         } catch (Exception $e) {
             DB::rollBack();
 
             return response()->json([
                 'error' => true,
-                'message' => 'Échec de l\'opération',
+                'msg' => 'Échec de l\'opération',
+                'details' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function InsertDesigneTraiteur(Request $request, $respo_id, $demande_id)
+    {
+        // ✅ Validation complète
+        $validator = Validator::make($request->all(), [
+            'traiteur_id' => 'required',
+            'date' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'info' => true,
+                'msg' => 'Formulaire non valide',
+                'errors' => $validator->errors()
+            ], 201);
+        }
+
+        DB::beginTransaction();
+
+        try {
+            // ✅ Insertion de la demande
+            $demandeUid = (string) Str::uuid();
+
+            $inserted = DB::table('demandes')->where('id', $demande_id)->update([
+                'traiteur_id' => $request->traiteur_id,
+                'date_limite' => $request->date,
+                'statut' => 'en_cours',
+                'updated_at' => now(),
+            ]);
+
+            if (!$inserted) {
+                throw new Exception('Erreur lors de l\'insertion dans la table demandes');
+            }
+
+            $inserted = DB::table('demande_actions')->insert([
+                'uid' => $demandeUid,
+                'demande_id' => $demande_id,
+                'user_id' => $respo_id,
+                'action' => 'Ordre de traitement',
+                'commentaire' => "Le responsable $request->respo à désigner $request->traiteur pour traiteur avant le $request->date date limite de traitement",
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            if (!$inserted) {
+                throw new Exception('Erreur lors de l\'insertion dans la table demande_actions');
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'msg' => 'Demande enregistrée avec succès ✅'
+            ], 200);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'error' => true,
+                'msg' => 'Échec de l\'opération',
                 'details' => $e->getMessage(),
             ], 500);
         }

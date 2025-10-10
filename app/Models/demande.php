@@ -9,10 +9,13 @@ class demande extends Model
     protected $fillable = [
         'uid',
         'user_id',
+        'traiteur_id',
+        'date_limite',
         'categorie_id',
         'objet',
         'description',
         'statut',
         'suppr',
+        'date_suppr',
     ];
 }

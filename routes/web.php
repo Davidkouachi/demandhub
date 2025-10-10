@@ -12,8 +12,8 @@ Route::get('/refresh-csrf', function () {
 
 Route::get('/Authentification', [AuthController::class, 'login'])->name('login');
 
-Route::middleware(['auth'])->group(function () {
-    Route::get('/deconnecter', [AuthController::class, 'deconnecter'])->name('deconnecter');
+Route::get('/deconnecter', [AuthController::class, 'deconnecter'])->name('deconnecter');
 
+Route::middleware(['auth'])->group(function () {
     Route::get('/', [Controller::class, 'dashbord'])->name('dashbord');
 });

@@ -267,7 +267,7 @@ $(document).ready(function () {
 
     window.preloader = function (type) {
 
-        if (type === 0) {
+        if (type == 1) {
             
             let preloader_ch = `
                 <div id="preloader_ch">
@@ -279,7 +279,7 @@ $(document).ready(function () {
             `;
             $("body").append(preloader_ch);
 
-        } else if (type === 1) {
+        } else if (type == 0) {
 
             $("#preloader_ch").remove();
 
@@ -342,6 +342,57 @@ $(document).ready(function () {
         } else {
             setVoice();
         }
+    };
+
+    window.showDynamicModal = function (data, options = {}, scroller = 0) {
+        const {
+            title = "Information", // titre par défaut
+            size = "md"            // taille par défaut
+        } = options;
+
+        const uniqueId = "customActionBox_" + Date.now();
+
+        // 🔹 Classes de tailles disponibles
+        const sizeClasses = {
+            xs: "custom-box-xs",
+            sm: "custom-box-sm",
+            md: "custom-box-md",
+            lg: "custom-box-lg",
+            xl: "custom-box-xl",
+            xxl: "custom-box-xxl",
+            full: "custom-box-full"
+        };
+
+        const sizeClass = sizeClasses[size] || sizeClasses.md;
+
+        const overlayHtml = `
+            <div class="custom-overlay" id="${uniqueId}">
+                <div class="custom-box ${sizeClass}">
+                    <div class="custom-box-header">
+                        <h4 class="custom-box-title">${title}</h4>
+                        <button class="custom-close-btn" id="${uniqueId}_close">
+                            <i class="ri-close-line"></i>
+                        </button>
+                    </div>
+                    <div class="custom-box-body" id="${uniqueId}_body" ${scroller == 0 ? `style="max-height: 90vh; overflow-y: auto;"` : ``}></div>
+                </div>
+            </div>
+        `;
+
+        $('body').append(overlayHtml);
+
+        const $overlay = $(`#${uniqueId}`);
+        const $boxBody = $(`#${uniqueId}_body`);
+        const $closeBtn = $(`#${uniqueId}_close`);
+
+        $boxBody.append(data);
+
+        // 🔹 Fermeture manuelle uniquement via le bouton
+        $closeBtn.on("click", function () {
+            $overlay.remove();
+        });
+
+        return $overlay;
     };
 
 });

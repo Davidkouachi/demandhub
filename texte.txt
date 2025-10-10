@@ -13,3 +13,13 @@
 422 → Validation échouée
 
 500 → Erreur serveur
+
+--------------------------------------------------------------------
+
+- php artisan make:command SeedAllCommand
+
+Cela va créer un fichier ici :
+app/Console/Commands/SeedAllCommand.php
+
+lancer la commande : php artisan seed:all
+

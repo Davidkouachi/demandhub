@@ -103,14 +103,7 @@ $(document).ready(function () {
 
                                     <div class="col-md-4">
                                         <label class="form-label">Catégorie</label>
-                                        <select class="form-control" data-choices id="categorie_id">
-                                            <option value="">Choisir une catégorie...</option>
-                                            <option>Matériel</option>
-                                            <option>Ressources humaines</option>
-                                            <option>Finances</option>
-                                            <option>Service client</option>
-                                            <option>Autres</option>
-                                        </select>
+                                        <select class="form-control" data-choices id="categorie_id"></select>
                                     </div>
 
                                     <div class="col-12">
@@ -175,7 +168,12 @@ $(document).ready(function () {
                         </div>
                         <div class="card-header d-flex justify-content-between align-items-center border-bottom">
                             <div>
-                                <input type="text" id="searchInput" class="form-control form-control-sm" placeholder="Rechercher...">
+                                <div class="app-search me-auto">
+                                   <div class="position-relative">
+                                        <input type="search" id="searchInput" class="form-control form-control-sm border-1 rounded-3" placeholder="Rechercher..." autocomplete="off" value="">
+                                        <i class="ri-search-line search-widget-icon"></i>
+                                   </div>
+                              </div>
                             </div>
                             <div>
                                 <a class="btn btn-outline-warning rounded-pill btnActualiser">
@@ -186,16 +184,14 @@ $(document).ready(function () {
                         </div>
                         <div class="card-body p-0">
                             <div class="table-responsive">
-                                <table class="table align-middle text-nowrap table-hover table-centered mb-0" id="agentTable">
+                                <table class="table align-middle text-nowrap table-hover table-centered mb-0" id="tableDemandeCours">
                                     <thead class="table-dark">
                                         <tr>
                                             <th class="text-center" >N°</th>
-                                            <th class="text-center" >Name</th>
-                                            <th class="text-center" >Email</th>
-                                            <th class="text-center" >Contact</th>
-                                            <th class="text-center" >Experience</th>
-                                            <th class="text-center" >Date</th>
-                                            <th class="text-center" >Status</th>
+                                            <th class="text-center" >Objet</th>
+                                            <th class="text-center" >Catégorie</th>
+                                            <th class="text-center" >Service</th>
+                                            <th class="text-center" >Statuts</th>
                                         </tr>
                                     </thead>
                                     <tbody></tbody>
@@ -260,7 +256,7 @@ $(document).ready(function () {
                         </div>
                         <div class="card-body p-0">
                             <div class="table-responsive">
-                                <table class="table align-middle text-nowrap table-hover table-centered mb-0" id="tableMesDemande">
+                                <table class="table align-middle text-nowrap table-hover table-centered mb-0" id="tableDemandeRecu">
                                     <thead class="table-dark">
                                         <tr>
                                             <th class="text-center" >N°</th>
@@ -268,6 +264,82 @@ $(document).ready(function () {
                                             <th class="text-center" >Catégorie</th>
                                             <th class="text-center" >Service</th>
                                             <th class="text-center" >Statuts</th>
+                                            <th class="text-center" >Fichier(s)</th>
+                                            <th class="text-center" >Date</th>
+                                            <th class="text-center" >Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination justify-content-end mb-0" id="pagination"></ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        return div;
+    }
+
+    window.ListeDemdandesRecu = function () {
+        
+        const div = `        
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center border-bottom">
+                            <div>
+                                <h4 class="card-title">
+                                    Liste des demandes reçues
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="card-header d-flex justify-content-between align-items-center border-bottom">
+                            <div>
+                                <div class="app-search me-auto">
+                                   <div class="position-relative">
+                                        <input type="search" id="searchInput" class="form-control form-control-sm border-1 rounded-3" placeholder="Rechercher..." autocomplete="off" value="">
+                                        <i class="ri-search-line search-widget-icon"></i>
+                                   </div>
+                              </div>
+                            </div>
+                            <div>
+                                <a class="btn btn-outline-warning rounded-pill btnActualiser">
+                                    Actualiser
+                                    <i class="ri-refresh-line"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-header border-bottom">
+                            <div class="row g-3 paraTable" >
+                                <div class="col-md-3">
+                                    <label class="form-label">Statut</label>
+                                    <select class="form-control" data-choices id="statut">
+                                        <option selected value="0">Tout</option>
+                                        <option value="en_attente" >En attente</option>
+                                        <option value="en_cours" >En cours</option>
+                                        <option value="traitee" >Terminé</option>
+                                        <option value="rejete" >Rejété</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table align-middle text-nowrap table-hover table-centered mb-0" id="tableDemandeRecu">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th class="text-center" >N°</th>
+                                            <th class="text-center" >Nom et Prénoms</th>
+                                            <th class="text-center" >Objet</th>
+                                            <th class="text-center" >Catégorie</th>
+                                            <th class="text-center" >Statuts</th>
+                                            <th class="text-center" >Fichier(s)</th>
                                             <th class="text-center" >Date</th>
                                             <th class="text-center" >Actions</th>
                                         </tr>

@@ -98,4 +98,34 @@ $(document).ready(function () {
             });
     }
 
+    window.select_traiteur_service= function (id, service_id) 
+    {
+        const selectElement = $(id);
+        selectElement.empty();
+        selectElement.append($('<option>', {
+            value: '',
+            text: 'Choisir un traiteur...',
+        }));
+
+        // Appel API avec Axios
+        axios.get(url + '/api/select_traiteur_service/' + service_id)
+            .then(function(response) {
+                const data = response.data.data;
+
+                // Ajouter dynamiquement les options
+                data.forEach(function(item) {
+                    selectElement.append(
+                        $('<option>', {
+                            value: item.id,
+                            text: item.name
+                        })
+                    );
+                });
+                selectRefreshId(selectElement);
+            })
+            .catch(function(error) {
+                console.error('Impossible de récupérer les traiteurs', error);
+            });
+    }
+
 });

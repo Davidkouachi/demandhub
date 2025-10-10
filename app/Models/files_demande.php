@@ -11,6 +11,7 @@ class files_demande extends Model
         'demande_uid',
         'nom_original',
         'chemin',
+        'url',
         'type',
     ];
 }

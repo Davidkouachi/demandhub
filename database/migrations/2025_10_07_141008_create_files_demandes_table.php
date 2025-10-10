@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nom_original');
             $table->string('chemin');
+            $table->string('url');
             $table->string('type');
             $table->string('uid')->unique()->index();
             $table->string('demande_uid')->index();

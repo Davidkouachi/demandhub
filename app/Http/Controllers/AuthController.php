@@ -384,13 +384,13 @@ class AuthController extends Controller
 
     public function deconnecter(Request $request)
     {
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        // Supprimer le cookie de session (ajuster le domaine si besoin)
-        setcookie('dk_stock_session', '', time() - 3600, '/', null, config('session.secure'), true);
-
+        if (Auth::check()) {
+            
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+        }
+        
         return redirect()->route('login')->withHeaders([
             'Cache-Control' => 'no-cache, no-store, must-revalidate',
             'Pragma' => 'no-cache',

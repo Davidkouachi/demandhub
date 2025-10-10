@@ -8,7 +8,7 @@ $(document).ready(function () {
         }
     }
 
-    window.showAlert = function (title, message, icon) {
+    window.showAlert = function (title, message, icon, callback = null) {
 
         deleteDivAlerteGlobal();
 
@@ -16,8 +16,16 @@ $(document).ready(function () {
             title: title,
             text: message,
             icon: icon,
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            confirmButtonText: "OK",
+            confirmButtonColor: "#3085d6",
+        }).then((result) => {
+            if (result.isConfirmed && typeof callback === "function") {
+                callback(); // ✅ Exécute la fonction passée
+            }
         });
-    }
+    };
 
     window.showAlert2 = function (id, message, color, btn = '0') {
 

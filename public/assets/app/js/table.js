@@ -130,13 +130,27 @@ $(document).ready(function() {
 	};
 
 	// Fonction globale pour afficher un "modal custom"
-	window.showDynamicActionModal = function(data = {}, buttons = []) {
+	window.showDynamicActionModal = function(data = {}, buttons = [], size = "xs") {
 	    const uniqueId = "customActionBox_" + Date.now();
+
+	    // Définir les classes de taille possibles
+	    const sizeClasses = {
+            xs: "custom-box-xs",
+            sm: "custom-box-sm",
+            md: "custom-box-md",
+            lg: "custom-box-lg",
+            xl: "custom-box-xl",
+            xxl: "custom-box-xxl",
+            full: "custom-box-full"
+        };
+
+	    // Taille choisie (par défaut : md)
+	    const sizeClass = sizeClasses[size] || sizeClasses.md;
 
 	    const overlayHtml = `
 	        <div class="custom-overlay" id="${uniqueId}">
-	            <div class="custom-box">
-	                <div class="d-flex flex-column gap-2" id="${uniqueId}_body">
+	            <div class="custom-box ${sizeClass}">
+	                <div class="d-flex flex-column gap-2 custom-box-body" id="${uniqueId}_body">
 	                    <!-- Boutons dynamiques -->
 	                </div>
 	            </div>
@@ -144,6 +158,8 @@ $(document).ready(function() {
 	    `;
 
 	    $('body').append(overlayHtml);
+
+	    console.log('of');
 
 	    const $overlay = $(`#${uniqueId}`);
 	    const $boxBody = $(`#${uniqueId}_body`);
@@ -165,7 +181,7 @@ $(document).ready(function() {
 	        }
 	    });
 
-	    return $overlay; // on retourne l'overlay pour l'utiliser ailleurs
+	    return $overlay; // retourne l’overlay pour d’autres manipulations
 	};
 
 });
