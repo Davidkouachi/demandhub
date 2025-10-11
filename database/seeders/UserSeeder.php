@@ -51,7 +51,7 @@ class UserSeeder extends Seeder
             'email' => 'traiteur@demandhub.com',
             'password' => password_hash('password', PASSWORD_BCRYPT),
             'role_id' => 3, // Employé
-            'service_id' => 0,
+            'service_id' => 3,
             'lock' => false,
             'suppr' => false,
             'created_at' => now(),

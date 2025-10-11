@@ -23,10 +23,10 @@ use PHPMailer\PHPMailer\Exception;
 
 class DeleteController extends Controller
 {
-    public function DeleteMesDemandes(Request $request, $user_id)
+    public function DeleteMesDemandes(Request $request, $user_id, $demande_id)
     {
 
-        $rech = DB::table('demandes')->where('user_id', $user_id)->exists();
+        $rech = DB::table('demandes')->where('id', $demande_id)->exists();
 
         if (!$rech) {
             return response()->json(['success' => false], 204);
@@ -38,7 +38,7 @@ class DeleteController extends Controller
             // ✅ Insertion de la demande
             $demandeUid = (string) Str::uuid();
 
-            $updated = DB::table('demandes')->where('user_id', $user_id)->update([
+            $updated = DB::table('demandes')->where('id', $demande_id)->where('user_id', $user_id)->update([
                 'suppr' => 1,
                 'date_suppr' => now(),
                 'updated_at' => now(),
@@ -66,4 +66,24 @@ class DeleteController extends Controller
         }
 
     }
+
+
+
+    // Fonction pour supprimer une annonce et les images associées
+    // private function rollbackAnnonce($annonceId)
+    // {
+    //     $annonce = Annonce::find($annonceId);
+    //     if ($annonce) {
+    //         // Supprimer les images associées
+    //         $photos = Annonce_photo::where('annonce_id', $annonceId)->get();
+    //         foreach ($photos as $photo) {
+    //             // Supprimer le fichier image du stockage
+    //             Storage::delete($photo->image_chemin);
+    //             // Supprimer l'enregistrement de la photo
+    //             $photo->delete();
+    //         }
+    //         // Supprimer l'annonce
+    //         $annonce->delete();
+    //     }
+    // }
 }

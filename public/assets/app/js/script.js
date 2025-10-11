@@ -17,8 +17,7 @@ $(document).ready(function () {
         }
     }
 
-    function pageLoader(dataPage)
-    {
+    function pageLoader(dataPage) {
         globalPage.attr('data-page', dataPage);
         globalPage.empty();
         globalPage.css('height', '100%');
@@ -33,14 +32,9 @@ $(document).ready(function () {
                 </div>
             </div>
         `);
-
-        // globalPage.html(`
-        //     <span class="anim_loader"></span>
-        // `);
     }
 
-    function pageTitre(titre, stitle)
-    {
+    function pageTitre(titre, stitle) {
         globalPage.append(`
             <div class="row">
                 <div class="col-12">
@@ -59,186 +53,37 @@ $(document).ready(function () {
         if (!page) return;
 
         pageLoader(data);
-        // return false;
 
         if (pageTimeout) clearTimeout(pageTimeout);
 
         pageTimeout = setTimeout(function () {
-
             globalPage.empty();
             globalPage.css('height', '');
             pageTimeout = null;
 
-            pageTitre(title,stitle); // titre du bouton
-
-            loadScriptForPage(page); // script spécifique
+            pageTitre(title, stitle);
+            loadScriptForPage(page);
         }, 1000);
 
-        document.title = title + " | DemandHub";
+        document.title = `${title} | DemandHub`;
 
+        // ✅ NOUVELLE LOGIQUE D’HISTORIQUE LISIBLE
         if (updateHistory) {
+            const readableUrl = `/?page=${encodeURIComponent(title)}`;
+            const stateData = { page, title };
+
             if (window.history.length <= 1) {
-                // Peu ou pas d'historique : remplacer l'état
-                window.history.replaceState({ page }, title, url);
+                window.history.replaceState(stateData, title, readableUrl);
             } else {
-                // Sinon, ajouter une nouvelle entrée
-                window.history.pushState({ page }, title, url);
+                window.history.pushState(stateData, title, readableUrl);
             }
-            localStorage.setItem("lastVisitedPage", page);
+
+            localStorage.setItem("lastVisitedPage", JSON.stringify({
+                page,
+                title,
+                url: readableUrl
+            }));
         }
-
-        // overDisplay(1);
-
-        // function updatePassword()
-        // {
-        //     const modalBody =`
-        //         <div id="updatePassword" class="modal fade" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
-        //             <div class="modal-dialog modal-dialog-centered">
-        //                 <div class="modal-content">
-        //                     <div class="modal-body">
-        //                         <div class="auth-brand text-center mt-n4 mb-n2 position-relative top-0">
-        //                             <a href="index.html" class="logo-dark">
-        //                                 <span><img src="assets/app/images/logo_bg.png" alt="dark logo" height="150"></span>
-        //                             </a>
-        //                             <a href="index.html" class="logo-light">
-        //                                 <span><img src="assets/app/images/logo_bg_dark.png" alt="logo" height="150"></span>
-        //                             </a>
-        //                         </div>
-        //                         <form class="ps-3 pe-3" id="formUpdatePassword">
-        //                             <div class="mb-3">
-        //                                 <label for="password-reset" class="form-label">Nouveau mot de passe</label>
-        //                                 <input class="form-control" type="password" id="password-reset" placeholder="Entrer votre mot de passe">
-        //                             </div>
-        //                             <div class="mb-3 text-center">
-        //                                 <button class="btn btn-primary btn_mdp_reset" type="submit">
-        //                                     Mise à jour
-        //                                 </button>
-        //                             </div>
-        //                         </form>
-        //                     </div>
-        //                 </div>
-        //             </div>
-        //         </div>
-        //     `;
-
-        //     $('.modal').remove();
-
-        //     $('body').append(modalBody);
-        //     const $modal = $('#updatePassword');
-        //     $modal.removeAttr('aria-hidden');
-        //     const modal = bootstrap.Modal.getOrCreateInstance($modal[0]);
-        //     modal.show();
-
-        //     $("#formUpdatePassword").on("submit", function (event) {
-        //         event.preventDefault();
-
-        //         const data = {
-        //             mdp: $('#password-reset').val(),
-        //         };
-
-        //         // Vérification des champs obligatoires
-        //         if (!data.mdp.trim()) {
-        //             showAlert("Alerte", "Veuillez saisir le mot de passe", "warning");
-        //             return false;
-        //         }
-
-        //         if (!verifPassword(data.mdp)) {
-        //             showAlert(
-        //                 "Alert",
-        //                 "Le mot de passe doit comporter au moins 8 caractères, une lettre majuscule, une lettre minuscule et un chiffre.",
-        //                 "warning"
-        //             );
-        //             return false;
-        //         }
-
-        //         spinerButton(0, '.btn_mdp_reset', 'Mise à jour en cours');
-        //         overDisplay(0);
-
-        //         // Envoi via Axios
-                
-        //         axios.get(`${url_base}/refresh-csrf`)
-        //         .then(response => {
-        //             const csrfToken = response.data.csrf_token;
-
-        //             // Met à jour le token dans la balise meta
-        //             csrfMeta.attr('content', csrfToken);
-
-        //             // Configuration de l'en-tête CSRF d'Axios
-        //             axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
-
-        //             // Deuxième requête : login
-        //             return axios.put(url_base + '/api/UpdateMdpUser/' + user.uid, {
-        //                 mdp: data.mdp,
-        //             });
-        //         })
-        //         .then(function (response) {
-        //             spinerButton(1, '.btn_mdp_reset', 'Mise à jour');
-        //             overDisplay(1);
-
-        //             const res = response.data;
-
-        //             if (res.success) {
-        //                 user.reset = 1;
-        //                 $('#updatePassword').modal('hide');
-        //                 showAlert("Alerte", res.message, "success");
-
-        //                 overDisplay(0);
-        //                 verifHoraire();  
-
-        //             } else if (res.info) {
-        //                 showAlert("Alerte", res.message, "info");
-        //             } else if (res.warning) {
-        //                 showAlert("Alerte", res.message, "warning");
-        //                 console.log(res.error);
-        //             } else if (res.error) {
-        //                 showAlert("Alerte", res.message, "danger");
-        //             } else {
-        //                 showAlert("Alerte", msg, "danger");
-        //             }
-
-        //         })
-        //         .catch(function (error) {
-        //             spinerButton(1, '.btn_mdp_reset', 'Mise à jour');
-        //             overDisplay(1);
-
-        //             let er;
-        //             if (error.response && error.response.data && error.response.data.message) {
-        //                 er = error.response.data.message;
-        //             }
-        //             showAlert("Erreur", msg, "error");
-        //             console.error("Erreur Axios :", error);
-        //         });
-
-        //     });
-        // }
-
-        // Charger le script global UNE fois
-        // if (!window.globalScriptLoaded) {
-        //     const script = document.createElement("script");
-        //     script.src = url_base + "/assets/app/js/page.js";
-        //     script.async = false;
-        //     script.onload = () => {
-        //         console.log("Script global chargé");
-        //         window.globalScriptLoaded = true;
-                
-        //         if (user.reset === 0) {
-        //             overDisplay(1);
-        //             updatePassword();
-        //         } else {
-        //           verifHoraire();  
-        //         }
-                
-        //     };
-        //     script.onerror = () => console.error("Erreur script global");
-        //     document.body.appendChild(script);
-        // } else {
-        //     if (user.reset === 0) {
-        //         overDisplay(1);
-        //         updatePassword();
-        //     } else {
-        //       verifHoraire();  
-        //     }
-        // }
     }
 
     function getPageFromUrl() {
@@ -246,25 +91,37 @@ $(document).ready(function () {
         return params.get("page");
     }
 
+    // ✅ NOUVELLE VERSION DE loadPageFromUrl
     function loadPageFromUrl() {
-        let page = getPageFromUrl();          // Récupère la page depuis l'URL
-        const defaultPage = 'tableau_de_bord';
+        const defaultPage = "tableau_de_bord";
+        const defaultTitle = "Tableau de bord";
 
-        // Si page invalide ou absente, on prend la valeur par défaut
-        if (!page) {
-            page = defaultPage;
-            const newUrl = `/?page=${page}`;
-            window.history.replaceState({ page }, "", newUrl);
+        // 1️⃣ - Récupère les infos du localStorage
+        const lastVisited = JSON.parse(localStorage.getItem("lastVisitedPage"));
+
+        // 2️⃣ - Lit le paramètre "page" visible dans l’URL (ex: ?page=Tableau de bord)
+        const titleFromUrl = getPageFromUrl();
+
+        // 3️⃣ - Détermine le titre et le slug interne
+        const title = titleFromUrl || lastVisited?.title || defaultTitle;
+        const page = lastVisited?.page || defaultPage;
+
+        // 4️⃣ - Corrige l’URL si besoin
+        const expectedUrl = `/?page=${encodeURIComponent(title)}`;
+        if (window.location.search !== `?page=${encodeURIComponent(title)}`) {
+            window.history.replaceState({ page, title }, title, expectedUrl);
         }
 
-        console.log("Page demandée :", page);
+        // 5️⃣ - Met à jour le titre de l’onglet
+        document.title = `${title} | DemandHub`;
 
-        // Chercher le lien correspondant dans le menu principal ou sous-menu
+        // 6️⃣ - Trouve le bouton dans le menu
         let $btn = $(`#menu-${page}`);
         if (!$btn.length) {
             $btn = $(`#submenu-${page}`);
         }
 
+        // 7️⃣ - Déclenche le clic
         if ($btn.length) {
             $btn.trigger("click");
             console.warn("Page trouvée dans le menu :", page);
@@ -289,13 +146,21 @@ $(document).ready(function () {
             mes_demandes_historique: [
                 url_base + "/assets/app/js/pages/mes_demandes/mes_demandes_historique.js",
             ],
-            
+
             toutes_demandes_recu: [
                 url_base + "/assets/app/js/pages/demande_recu/toutes_demandes_recu.js",
             ],
+
+            affecter_demande: [
+                url_base + "/assets/app/js/pages/assign_demande/index.js",
+            ],
+
+            toutes_assign_demandes: [
+                url_base + "/assets/app/js/pages/demande_assign/toutes_assign_demandes.js",
+            ],
         };
 
-        // Supprimer tous les scripts déclarés dans le scriptMap
+        // Supprime tous les anciens scripts
         Object.values(scriptMap).flat().forEach(scriptUrl => {
             const existingScript = $(`script[src="${scriptUrl}"]`);
             if (existingScript.length > 0) {
@@ -304,7 +169,7 @@ $(document).ready(function () {
             }
         });
 
-        // Charger uniquement les scripts de la page demandée
+        // Charge uniquement les scripts de la page demandée
         const scripts = scriptMap[page];
         if (!scripts) return;
 

@@ -25,7 +25,7 @@ $(document).ready(function() {
 
         loadingTable('#tableDemandeRecu', '#pagination', 1);
 
-        const urlAxios = `${url}/api/ListeDemandesRecu/${user.id}/${user.service_id}/${user.role_id}`;
+        const urlAxios = `${url}/api/ListeDemandesRecu/${user.id}/${user.role_id}/${user.service_id}`;
 
         reqAxios(0, urlAxios,'GET')
             .then(res => {

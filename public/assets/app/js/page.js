@@ -82,6 +82,8 @@ $(document).ready(function () {
         return div;
     }
 
+    // Mes demandes -------------------------------------------------------------------------------------------
+
     window.FomulaireDemdande = function () {
         
         const div = `        
@@ -256,7 +258,7 @@ $(document).ready(function () {
                         </div>
                         <div class="card-body p-0">
                             <div class="table-responsive">
-                                <table class="table align-middle text-nowrap table-hover table-centered mb-0" id="tableDemandeRecu">
+                                <table class="table align-middle text-nowrap table-hover table-centered mb-0" id="tableMesDemande">
                                     <thead class="table-dark">
                                         <tr>
                                             <th class="text-center" >N°</th>
@@ -285,6 +287,8 @@ $(document).ready(function () {
 
         return div;
     }
+
+    // Demande recu -------------------------------------------------------------------------------------------
 
     window.ListeDemdandesRecu = function () {
         
@@ -332,6 +336,131 @@ $(document).ready(function () {
                         <div class="card-body p-0">
                             <div class="table-responsive">
                                 <table class="table align-middle text-nowrap table-hover table-centered mb-0" id="tableDemandeRecu">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th class="text-center" >N°</th>
+                                            <th class="text-center" >Nom et Prénoms</th>
+                                            <th class="text-center" >Objet</th>
+                                            <th class="text-center" >Catégorie</th>
+                                            <th class="text-center" >Statuts</th>
+                                            <th class="text-center" >Fichier(s)</th>
+                                            <th class="text-center" >Date</th>
+                                            <th class="text-center" >Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination justify-content-end mb-0" id="pagination"></ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        return div;
+    }
+
+    // Assigner demande-------------------------------------------------------------------------------------------
+
+    window.FomulaireAssignDemdande = function () {
+        
+        const div = `        
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title mb-1 anchor">
+                                Formulaire
+                            </h5>
+                            <p class="text-muted">Veuillez renseigner tous les champs du formulaire et vérifier vos informations avant de l’envoyer.</p>
+                            <div class="mb-3">
+                                <form class="row g-3" id="formAssignDemande">
+                                    <div class="col-md-4">
+                                        <label class="form-label">Statut</label>
+                                        <select class="form-control" data-choices id="statut">
+                                            <option value="">Choisir</option>
+                                            <option value="en_attente" >En Attente</option>
+                                            <option value="en_cours" >En cours</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label class="form-label">Demandes</label>
+                                        <select class="form-control" data-choices id="demande_id"></select>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label class="form-label">Traiteur</label>
+                                        <select class="form-control" data-choices id="traiteur_id"></select>
+                                    </div>
+
+                                    <div class="col-12 text-center">
+                                        <button class="btn btn-primary btnForm" type="submit">Valider l'affectation</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+
+        return div;
+    }
+
+    // Demande assigner -------------------------------------------------------------------------------------------
+
+    window.ListeDemdandesAssign = function () {
+        
+        const div = `        
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center border-bottom">
+                            <div>
+                                <h4 class="card-title">
+                                    Liste des demandes assignées
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="card-header d-flex justify-content-between align-items-center border-bottom">
+                            <div>
+                                <div class="app-search me-auto">
+                                   <div class="position-relative">
+                                        <input type="search" id="searchInput" class="form-control form-control-sm border-1 rounded-3" placeholder="Rechercher..." autocomplete="off" value="">
+                                        <i class="ri-search-line search-widget-icon"></i>
+                                   </div>
+                              </div>
+                            </div>
+                            <div>
+                                <a class="btn btn-outline-warning rounded-pill btnActualiser">
+                                    Actualiser
+                                    <i class="ri-refresh-line"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-header border-bottom">
+                            <div class="row g-3 paraTable" >
+                                <div class="col-md-3">
+                                    <label class="form-label">Statut</label>
+                                    <select class="form-control" data-choices id="statut">
+                                        <option selected value="0">Tout</option>
+                                        <option value="en_cours" >En cours</option>
+                                        <option value="traitee" >Terminé</option>
+                                        <option value="rejete" >Rejété</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table align-middle text-nowrap table-hover table-centered mb-0" id="tableDemandeAssign">
                                     <thead class="table-dark">
                                         <tr>
                                             <th class="text-center" >N°</th>

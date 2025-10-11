@@ -29,6 +29,7 @@ Route::middleware(['web', 'checkAuth'])->group(function () {
     // list start 
         Route::get('/ListeMesDemandes/{user_id}/{statut?}', [ListeController::class, 'ListeMesDemandes']);
         Route::get('/ListeDemandesRecu/{user_id}/{role_id}/{service_id}/{statut?}', [ListeController::class, 'ListeDemandesRecu']);
+        Route::get('/ListeDemandesAssign/{user_id}/{service_id}/{statut?}', [ListeController::class, 'ListeDemandesAssign']);
     // list end
 
     // update start 
@@ -36,6 +37,6 @@ Route::middleware(['web', 'checkAuth'])->group(function () {
     // update end
 
     // delete start 
-        Route::delete('/DeleteMesDemandes/{user_id}', [DeleteController::class, 'DeleteMesDemandes']);
+        Route::delete('/DeleteMesDemandes/{user_id}/{demande_id}', [DeleteController::class, 'DeleteMesDemandes']);
     // delete end
 });
