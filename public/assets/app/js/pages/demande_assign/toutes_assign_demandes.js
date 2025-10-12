@@ -40,17 +40,15 @@ $(document).ready(function() {
             return $(`
                 <tr>
                     <td class="text-center" >${start + index + 1}</td>
-                    <td class="text-center" >${item.name}</td>
-                    <td class="text-center" >
-                        <span class="text-dark fw-medium fs-15">${item.objet}</span>
-                    </td>
+                    <td class="text-center" >${item.traiteur_name}</td>
+                    <td class="text-center" >${item.uid}</td>
                     <td class="text-center" >${item.categorie}</td>
                     <td class="text-center">
                         <span class="badge 
-                            ${item.statut === 'en_attente' ? 'bg-warning-subtle text-warning' :
-                              item.statut === 'en_cours'   ? 'bg-primary-subtle text-primary' :
-                              item.statut === 'traitee'    ? 'bg-success-subtle text-success' :
-                              item.statut === 'rejete'     ? 'bg-danger-subtle text-danger' :
+                            ${item.statut === 'en_attente' ? 'bg-warning' :
+                              item.statut === 'en_cours'   ? 'bg-primary' :
+                              item.statut === 'traitee'    ? 'bg-success' :
+                              item.statut === 'rejete'     ? 'bg-danger' :
                               'bg-secondary-subtle text-secondary'} 
                             py-1 px-2 fs-13">
                             ${item.statut === 'en_attente' ? 'En attente' :
@@ -65,7 +63,20 @@ $(document).ready(function() {
                                 ${item.fichiers.length}
                             ` : `0` }
                     </td>
-                    <td class="text-center" >${formatDateHeure(item.created_at)}</td>
+                    <td class="text-center">
+                        <span class="badge 
+                            ${(() => {
+                                const now = new Date();
+                                const limite = new Date(item.date_limite);
+
+                                return limite > now ? 'bg-success' : 
+                                    limite == now ? 'bg-warning' : 
+                                    'bg-danger';
+                            })()} 
+                            py-1 px-2 fs-13">
+                            ${formatDateHeure(item.date_limite)}
+                        </span>
+                    </td>
                     <td class="text-center" >
                         <div class="d-flex align-items-center justify-content-center gap-2">
                             <a href="#!" class="btn btn-warning btn-sm btn-view rounded-2" data-id="${item.id}">

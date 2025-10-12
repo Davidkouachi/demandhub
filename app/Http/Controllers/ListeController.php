@@ -136,7 +136,8 @@ class ListeController extends Controller
         $data = DB::table('demandes')
             ->join('categories_demandes', 'categories_demandes.id', '=', 'demandes.categorie_id')
             ->join('services', 'services.id', '=', 'categories_demandes.service_id')
-            ->join('users', 'users.id', '=', 'demandes.user_id')
+            ->join('users as u1', 'u1.id', '=', 'demandes.user_id') // demandeur
+            ->join('users as u2', 'u2.id', '=', 'demandes.traiteur_id') // traiteur
             ->where('services.id', $service_id)
             ->where('demandes.suppr', 0)
             ->where('demandes.traiteur_id', '!=', null);
@@ -155,7 +156,9 @@ class ListeController extends Controller
                 'demandes.description',
                 'demandes.statut',
                 'demandes.created_at',
-                'users.name',
+                'demandes.date_limite',
+                'u1.name as name',        // Nom du demandeur
+                'u2.name as traiteur_name',    // Nom du traiteur
                 'categories_demandes.nom as categorie',
                 'categories_demandes.service_id',
                 DB::raw('(SELECT COUNT(*) FROM files_demandes WHERE files_demandes.demande_uid = demandes.uid) as total_files')

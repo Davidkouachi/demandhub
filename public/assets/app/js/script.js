@@ -7,7 +7,7 @@ $(document).ready(function () {
     function init() {
         if (menuRole.length > 0) {
             renderMenus(menuRole, nomRole).then(() => {
-                loadPageFromUrl();
+                loadPageFromUrl(user);
             });
         } else {
             $btn = $('#menu-tableau_de_bord');
@@ -81,7 +81,8 @@ $(document).ready(function () {
             localStorage.setItem("lastVisitedPage", JSON.stringify({
                 page,
                 title,
-                url: readableUrl
+                url: readableUrl,
+                userId: user.id,
             }));
         }
     }
@@ -92,36 +93,39 @@ $(document).ready(function () {
     }
 
     // ✅ NOUVELLE VERSION DE loadPageFromUrl
-    function loadPageFromUrl() {
+    function loadPageFromUrl(user) {
         const defaultPage = "tableau_de_bord";
         const defaultTitle = "Tableau de bord";
 
         // 1️⃣ - Récupère les infos du localStorage
-        const lastVisited = JSON.parse(localStorage.getItem("lastVisitedPage"));
+        const allVisited = JSON.parse(localStorage.getItem("lastVisitedPage")) || null;
 
-        // 2️⃣ - Lit le paramètre "page" visible dans l’URL (ex: ?page=Tableau de bord)
+        // 2️⃣ - Filtre par userId
+        const lastVisited = allVisited?.userId === user.id ? allVisited : null;
+
+        // 3️⃣ - Lit le paramètre "page" visible dans l’URL (ex: ?page=Tableau de bord)
         const titleFromUrl = getPageFromUrl();
 
-        // 3️⃣ - Détermine le titre et le slug interne
+        // 4️⃣ - Détermine le titre et le slug interne
         const title = titleFromUrl || lastVisited?.title || defaultTitle;
         const page = lastVisited?.page || defaultPage;
 
-        // 4️⃣ - Corrige l’URL si besoin
+        // 5️⃣ - Corrige l’URL si besoin
         const expectedUrl = `/?page=${encodeURIComponent(title)}`;
         if (window.location.search !== `?page=${encodeURIComponent(title)}`) {
-            window.history.replaceState({ page, title }, title, expectedUrl);
+            window.history.replaceState({ page, title, userId: user.id }, title, expectedUrl);
         }
 
-        // 5️⃣ - Met à jour le titre de l’onglet
+        // 6️⃣ - Met à jour le titre de l’onglet
         document.title = `${title} | DemandHub`;
 
-        // 6️⃣ - Trouve le bouton dans le menu
+        // 7️⃣ - Trouve le bouton dans le menu
         let $btn = $(`#menu-${page}`);
         if (!$btn.length) {
             $btn = $(`#submenu-${page}`);
         }
 
-        // 7️⃣ - Déclenche le clic
+        // 8️⃣ - Déclenche le clic
         if ($btn.length) {
             $btn.trigger("click");
             console.warn("Page trouvée dans le menu :", page);
@@ -158,6 +162,10 @@ $(document).ready(function () {
             toutes_assign_demandes: [
                 url_base + "/assets/app/js/pages/demande_assign/toutes_assign_demandes.js",
             ],
+
+            ajouter_employe: [
+                url_base + "/assets/app/js/pages/utilisateur/ajouter_employe.js",
+            ], 
         };
 
         // Supprime tous les anciens scripts

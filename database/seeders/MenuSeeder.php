@@ -57,7 +57,7 @@ class MenuSeeder extends Seeder
             ['id' => 6, 'name' => 'Mes Demandes', 'slug' => 'mes_demandes', 'icon' => 'ri-file-list-line', 'is_dropdown' => true, 'parent_id' => null, 'order' => 6],
             ['id' => 7, 'name' => 'Services', 'slug' => 'gestion_services', 'icon' => 'ri-building-2-line', 'is_dropdown' => true, 'parent_id' => null, 'order' => 7],
             ['id' => 8, 'name' => 'Utilisateurs', 'slug' => 'utilisateurs', 'icon' => 'ri-user-3-line', 'is_dropdown' => true, 'parent_id' => null, 'order' => 8],
-            ['id' => 9, 'name' => 'Catégories de demandes', 'slug' => 'categories_demandes', 'icon' => 'ri-list-check-2', 'is_dropdown' => true, 'parent_id' => null, 'order' => 9],
+            ['id' => 9, 'name' => 'Catégories de demandes', 'slug' => 'categories_demandes', 'icon' => 'ri-list-check-2', 'is_dropdown' => false, 'parent_id' => null, 'order' => 9],
             ['id' => 10, 'name' => 'Limitations des demandes', 'slug' => 'limitations_demandes', 'icon' => 'ri-lock-line', 'is_dropdown' => false, 'parent_id' => null, 'order' => 10],
             ['id' => 11, 'name' => 'Verrouillage de compte', 'slug' => 'verrouillage_compte', 'icon' => 'ri-user-unfollow-line', 'is_dropdown' => false, 'parent_id' => null, 'order' => 11],
             ['id' => 12, 'name' => 'Statistiques & rapports', 'slug' => 'statistiques', 'icon' => 'ri-bar-chart-2-line', 'is_dropdown' => true, 'parent_id' => null, 'order' => 12],
@@ -110,10 +110,6 @@ class MenuSeeder extends Seeder
             ['name' => 'Affecter un employé à un service', 'slug' => 'affecter_employe_service', 'parent_id' => 8, 'order' => 3],
             ['name' => 'Nommer / Changer responsable de service', 'slug' => 'changer_responsable', 'parent_id' => 8, 'order' => 4],
             ['name' => 'Changer les accès', 'slug' => 'changer_acces', 'parent_id' => 8, 'order' => 5],
-
-            // Catégories de demandes
-            ['name' => 'Créer une catégorie', 'slug' => 'creer_categorie', 'parent_id' => 9, 'order' => 1],
-            ['name' => 'Liste des catégories', 'slug' => 'liste_categories', 'parent_id' => 9, 'order' => 2],
 
             // Statistiques & rapports (autres sous-menus)
             ['name' => 'Rapports globaux', 'slug' => 'rapports_globaux', 'parent_id' => 12, 'order' => 3],

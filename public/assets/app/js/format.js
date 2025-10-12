@@ -25,6 +25,37 @@ $(document).ready(function () {
         return `${day}/${month}/${year} à ${hours}:${minutes}:${seconds}`;
     }
 
+    window.dataDayLimite = function (selector, mode = 'min') {
+        const $el = $(selector);
+        if (!$el.length) return;
+
+        const now = new Date();
+
+        // Format : YYYY-MM-DD
+        const year   = now.getFullYear();
+        const month  = String(now.getMonth() + 1).padStart(2, '0');
+        const day    = String(now.getDate()).padStart(2, '0');
+
+        // Format : YYYY-MM-DDTHH:MM
+        const hours   = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+
+        const onlyDate = `${year}-${month}-${day}`;
+        const dateTime = `${onlyDate}T${hours}:${minutes}`;
+
+        // Si l'input est de type datetime-local, on met l'heure
+        const inputType = $el.attr('type');
+
+        if (inputType === 'datetime-local') {
+            $el.attr(mode, dateTime);
+            console.log(`✅ ${mode} défini à ${dateTime} pour un champ datetime-local`);
+        } else {
+            // sinon, champ type date → uniquement la date
+            $el.attr(mode, onlyDate);
+            console.log(`✅ ${mode} défini à ${onlyDate} pour un champ date`);
+        }
+    };
+
     window.calculAge = function (dateString) {
         const birthDate = new Date(dateString);
         const today = new Date();

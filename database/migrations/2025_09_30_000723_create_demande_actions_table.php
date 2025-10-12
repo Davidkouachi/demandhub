@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('demande_actions', function (Blueprint $table) {
             $table->id();
-            $table->string('uid')->unique()->index();
             $table->integer('demande_id');
             $table->integer('user_id'); // celui qui agit
             $table->string('action'); // ex: assigné, commentaire, clôture

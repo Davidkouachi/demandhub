@@ -19,6 +19,7 @@ Route::middleware(['web', 'checkAuth'])->group(function () {
     // select start 
         Route::get('/select_categories', [SelectController::class, 'select_categories']);
         Route::get('/select_traiteur_service/{service_id}', [SelectController::class, 'select_traiteur_service']);
+        Route::get('/select_demande_assign/{service_id}/{statut}', [SelectController::class, 'select_demande_assign']);
     // select end
 
     // insert start 

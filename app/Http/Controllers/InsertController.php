@@ -23,6 +23,30 @@ use PHPMailer\PHPMailer\Exception;
 
 class InsertController extends Controller
 {
+    public function generateUniqueDemande()
+    {
+        return DB::transaction(function () {
+            $anneeCourte = date('y'); // 2 derniers chiffres de l'année, ex: 25
+            $prefixe = 'DEM' . $anneeCourte; // ex: DEM25
+
+            do {
+                // Générer 6 chiffres aléatoires
+                $numero = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+                $matricule = $prefixe . '-' . $numero;
+
+                // Vérifier si ce matricule existe déjà
+                $exists = DB::table('demandes')->where('ni', $matricule)->lockForUpdate()->exists();
+            } while ($exists); // Réessayer tant que doublon
+
+            return $matricule;
+        }, 5); // tentatives en cas de blocage concurrent
+    }
+
+
+
+
+
+
     public function InsertDemandes(Request $request, $user_id)
     {
         // ✅ Validation complète
@@ -46,7 +70,7 @@ class InsertController extends Controller
 
         try {
             // ✅ Insertion de la demande
-            $demandeUid = (string) Str::uuid();
+            $demandeUid = $this->generateUniqueDemande();
 
             $inserted = DB::table('demandes')->insert([
                 'uid' => $demandeUid,
@@ -150,8 +174,6 @@ class InsertController extends Controller
         DB::beginTransaction();
 
         try {
-            // ✅ Insertion de la demande
-            $demandeUid = (string) Str::uuid();
 
             $inserted = DB::table('demandes')->where('id', $demande_id)->update([
                 'traiteur_id' => $request->traiteur_id,
@@ -165,7 +187,6 @@ class InsertController extends Controller
             }
 
             $inserted = DB::table('demande_actions')->insert([
-                'uid' => $demandeUid,
                 'demande_id' => $demande_id,
                 'user_id' => $respo_id,
                 'action' => 'Ordre de traitement',

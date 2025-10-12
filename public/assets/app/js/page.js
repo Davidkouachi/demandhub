@@ -377,26 +377,30 @@ $(document).ready(function () {
                             <h5 class="card-title mb-1 anchor">
                                 Formulaire
                             </h5>
-                            <p class="text-muted">Veuillez renseigner tous les champs du formulaire et vérifier vos informations avant de l’envoyer.</p>
+                            <p class="text-muted">Veuillez renseigner tous les champs du formulaire et vérifier vos informations avant de valider.</p>
                             <div class="mb-3">
                                 <form class="row g-3" id="formAssignDemande">
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                         <label class="form-label">Statut</label>
                                         <select class="form-control" data-choices id="statut">
-                                            <option value="">Choisir</option>
-                                            <option value="en_attente" >En Attente</option>
+                                            <option selected value="en_attente" >En Attente</option>
                                             <option value="en_cours" >En cours</option>
                                         </select>
                                     </div>
 
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                         <label class="form-label">Demandes</label>
                                         <select class="form-control" data-choices id="demande_id"></select>
                                     </div>
 
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                         <label class="form-label">Traiteur</label>
                                         <select class="form-control" data-choices id="traiteur_id"></select>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="objet" class="form-label">Date limite de traitement</label>
+                                        <input type="datetime-local" class="form-control" id="date">
                                     </div>
 
                                     <div class="col-12 text-center">
@@ -464,12 +468,12 @@ $(document).ready(function () {
                                     <thead class="table-dark">
                                         <tr>
                                             <th class="text-center" >N°</th>
-                                            <th class="text-center" >Nom et Prénoms</th>
-                                            <th class="text-center" >Objet</th>
+                                            <th class="text-center" >Agent traiteur</th>
+                                            <th class="text-center" >Identifiant</th>
                                             <th class="text-center" >Catégorie</th>
                                             <th class="text-center" >Statuts</th>
                                             <th class="text-center" >Fichier(s)</th>
-                                            <th class="text-center" >Date</th>
+                                            <th class="text-center" >Date Limite</th>
                                             <th class="text-center" >Actions</th>
                                         </tr>
                                     </thead>
@@ -489,6 +493,92 @@ $(document).ready(function () {
 
         return div;
     }
+
+    // users -------------------------------------------------------------------------------------------
+
+    window.FormulaireUser = function () {
+        const div = `
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title mb-1 anchor">Création d'un utilisateur</h5>
+                        <p class="text-muted">Veuillez renseigner tous les champs et vérifier les informations avant de créer l'utilisateur.</p>
+
+                        <div class="mb-3">
+                            <form class="row g-3" id="formUser">
+
+                                <div class="col-md-6">
+                                    <label for="name" class="form-label">Nom complet</label>
+                                    <input type="text" class="form-control" id="name" placeholder="Ex : David Kouachi" required>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="login" class="form-label">Login</label>
+                                    <input type="text" class="form-control" id="login" placeholder="Identifiant unique" required>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email" placeholder="exemple@domaine.com">
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="password" class="form-label">Mot de passe</label>
+                                    <input type="password" class="form-control" id="password" placeholder="********" required>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="role_id" class="form-label">Rôle</label>
+                                    <select class="form-control" id="role_id" required>
+                                        <option value="">Sélectionnez un rôle</option>
+                                        <option value="1">Administrateur</option>
+                                        <option value="2">Responsable</option>
+                                        <option value="3">Utilisateur</option>
+                                        <!-- Ajouter d'autres rôles selon ta table -->
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="service_id" class="form-label">Service</label>
+                                    <select class="form-control" id="service_id" required>
+                                        <option value="">Sélectionnez un service</option>
+                                        <option value="1">Service A</option>
+                                        <option value="2">Service B</option>
+                                        <!-- Ajouter d'autres services -->
+                                    </select>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-check form-switch mt-4">
+                                        <input class="form-check-input" type="checkbox" id="suppr">
+                                        <label class="form-check-label" for="suppr">Supprimé</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-check form-switch mt-4">
+                                        <input class="form-check-input" type="checkbox" id="lock">
+                                        <label class="form-check-label" for="lock">Verrouillé</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <button class="btn btn-primary btnUserForm" type="submit">Créer l'utilisateur</button>
+                                </div>
+
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+
+        return div;
+    }
+
 
     // ---------------------------------------------------------------------
 
@@ -536,7 +626,12 @@ $(document).ready(function () {
 
                             const subMenuItem = $(`
                                 <li class="sub-nav-item">
-                                    <a class="sub-nav-link" id="${subMenuId}" href="${submenu.href}" title="${submenu.title}" data-page="${submenu.data_page}">
+                                    <a class="sub-nav-link" 
+                                       id="${subMenuId}" 
+                                       href="${submenu.href}" 
+                                       title="${submenu.title}" 
+                                       data-page="${submenu.data_page}"
+                                       style="display: block; word-wrap: break-word; white-space: normal; overflow-wrap: break-word;">
                                         ${submenu.name}
                                     </a>
                                 </li>
