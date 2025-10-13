@@ -11,7 +11,7 @@ $(document).ready(function() {
     function initStart()  {
 
         globalePage.append(FomulaireDemdande());
-        select_categories('#categorie_id');
+        select_categories_all('#categorie_id');
         renderPreviewFiles();
         
     }
@@ -284,7 +284,7 @@ $(document).ready(function() {
     function resetForm() {
         // Réinitialise les champs texte
         $('#objet').val(null);
-        $('#categorie_id').val(null).trigger('change.select2');
+        selectRefreshNull('#categorie_id');
         $('#description').val(null);
 
         // Réinitialise la case à cocher ou le switch

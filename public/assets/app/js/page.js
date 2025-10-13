@@ -496,70 +496,56 @@ $(document).ready(function () {
 
     // users -------------------------------------------------------------------------------------------
 
-    window.FormulaireUser = function () {
+    window.FormulaireNewEmploye = function () {
         const div = `
         <div class="row">
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title mb-1 anchor">Création d'un utilisateur</h5>
+                        <h5 class="card-title mb-1 anchor">Création d'un employé</h5>
                         <p class="text-muted">Veuillez renseigner tous les champs et vérifier les informations avant de créer l'utilisateur.</p>
 
                         <div class="mb-3">
                             <form class="row g-3" id="formUser">
 
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <label for="name" class="form-label">Nom complet</label>
-                                    <input type="text" class="form-control" id="name" placeholder="Ex : David Kouachi" required>
+                                    <input type="text" class="form-control" id="name" placeholder="Ex : David Kouachi">
                                 </div>
 
-                                <div class="col-md-6">
-                                    <label for="login" class="form-label">Login</label>
-                                    <input type="text" class="form-control" id="login" placeholder="Identifiant unique" required>
+                                <div class="col-md-4">
+                                    <label for="tel" class="form-label">Contact</label>
+                                    <input type="tel" class="form-control" id="tel" placeholder="Ex : 0102030405">
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <label for="email" class="form-label">Email</label>
                                     <input type="email" class="form-control" id="email" placeholder="exemple@domaine.com">
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-md-4">
+                                    <label for="login" class="form-label">Login</label>
+                                    <input type="text" class="form-control" id="login" placeholder="Identifiant unique">
+                                </div>
+
+                                <div class="col-md-4">
                                     <label for="password" class="form-label">Mot de passe</label>
-                                    <input type="password" class="form-control" id="password" placeholder="********" required>
+                                    <input type="password" class="form-control" id="password" value="password">
                                 </div>
 
-                                <div class="col-md-6">
-                                    <label for="role_id" class="form-label">Rôle</label>
-                                    <select class="form-control" id="role_id" required>
-                                        <option value="">Sélectionnez un rôle</option>
-                                        <option value="1">Administrateur</option>
-                                        <option value="2">Responsable</option>
-                                        <option value="3">Utilisateur</option>
-                                        <!-- Ajouter d'autres rôles selon ta table -->
-                                    </select>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label for="service_id" class="form-label">Service</label>
-                                    <select class="form-control" id="service_id" required>
-                                        <option value="">Sélectionnez un service</option>
-                                        <option value="1">Service A</option>
-                                        <option value="2">Service B</option>
-                                        <!-- Ajouter d'autres services -->
-                                    </select>
-                                </div>
-
-                                <div class="col-md-4">
-                                    <div class="form-check form-switch mt-4">
-                                        <input class="form-check-input" type="checkbox" id="suppr">
-                                        <label class="form-check-label" for="suppr">Supprimé</label>
+                                <div class="col-12 row">
+                                    <div class="col-md-2 col-sm-3 col-6">
+                                        <div class="form-check form-switch mt-4">
+                                            <input class="form-check-input" type="checkbox" id="suppr">
+                                            <label class="form-check-label" for="suppr">Supprimé</label>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="col-md-4">
-                                    <div class="form-check form-switch mt-4">
-                                        <input class="form-check-input" type="checkbox" id="lock">
-                                        <label class="form-check-label" for="lock">Verrouillé</label>
+                                    <div class="col-md-2 col-sm-3 col-6">
+                                        <div class="form-check form-switch mt-4">
+                                            <input class="form-check-input" type="checkbox" id="lock">
+                                            <label class="form-check-label" for="lock">Verrouillé</label>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -579,6 +565,44 @@ $(document).ready(function () {
         return div;
     }
 
+    window.FormulaireAffecterEmploye = function () {
+        const div = `
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title mb-1 anchor">Création d'un utilisateur</h5>
+                        <p class="text-muted">Veuillez renseigner tous les champs et vérifier les informations avant de valider.
+                         NB: Lorsque l'on affecte un employé a un service, automatiquement celui-ci devient un traiteur de demande dans le service en question.</p>
+
+                        <div class="mb-3">
+                            <form class="row g-3" id="formulaire">
+
+                                <div class="col-md-6">
+                                    <label class="form-label">Employé</label>
+                                    <select class="form-control" data-choices id="employe_id"></select>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">Service</label>
+                                    <select class="form-control" data-choices id="service_id"></select>
+                                </div>
+
+                                <div class="col-12">
+                                    <button class="btn btn-primary btnForm" type="submit">Valider</button>
+                                </div>
+
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+
+        return div;
+    }
 
     // ---------------------------------------------------------------------
 

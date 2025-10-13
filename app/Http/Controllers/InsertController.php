@@ -35,7 +35,26 @@ class InsertController extends Controller
                 $matricule = $prefixe . '-' . $numero;
 
                 // Vérifier si ce matricule existe déjà
-                $exists = DB::table('demandes')->where('ni', $matricule)->lockForUpdate()->exists();
+                $exists = DB::table('demandes')->where('uid', $matricule)->lockForUpdate()->exists();
+            } while ($exists); // Réessayer tant que doublon
+
+            return $matricule;
+        }, 5); // tentatives en cas de blocage concurrent
+    }
+
+    public function generateUniqueUser()
+    {
+        return DB::transaction(function () {
+            $anneeCourte = date('y'); // 2 derniers chiffres de l'année, ex: 25
+            $prefixe = 'AGENT' . $anneeCourte; // ex: DEM25
+
+            do {
+                // Générer 6 chiffres aléatoires
+                $numero = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+                $matricule = $prefixe . '-' . $numero;
+
+                // Vérifier si ce matricule existe déjà
+                $exists = DB::table('users')->where('uid', $matricule)->lockForUpdate()->exists();
             } while ($exists); // Réessayer tant que doublon
 
             return $matricule;
@@ -197,6 +216,87 @@ class InsertController extends Controller
 
             if (!$inserted) {
                 throw new Exception('Erreur lors de l\'insertion dans la table demande_actions');
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'msg' => 'Demande enregistrée avec succès ✅'
+            ], 200);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'error' => true,
+                'msg' => 'Échec de l\'opération',
+                'details' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function InsertUser(Request $request)
+    {
+        // ✅ Validation complète
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'login' => 'required',
+            'tel' => 'required',
+            'email' => 'required',
+            'password' => 'required',
+            'role_id' => 'required',
+            'service_id' => 'required',
+            'suppr' => 'required|boolean',
+            'lock' => 'required|boolean',
+        ]);
+
+        if ($validator->fails()) {
+            Log::info($validator->errors());
+            return response()->json([
+                'info' => true,
+                'msg' => 'Formulaire non valide',
+                'errors' => $validator->errors()
+            ], 201);
+        }
+
+        // $rechService = DB::table('users')
+        //             ->where('role_id', 2)
+        //             ->where('service_id', $request->service_id)
+        //             ->count();
+
+        // if (($rechService > 0) && $request->role_id == 2) {
+
+        //     return response()->json([
+        //         'info' => true,
+        //         'msg' => 'Ce service à déjà un responsable',
+        //         'errors' => ''
+        //     ], 201);
+        // }
+
+        DB::beginTransaction();
+
+        try {
+            // ✅ Insertion de la demande
+            $uid = $this->generateUniqueUser();
+
+            $inserted = DB::table('users')->insert([
+                'uid' => $uid,
+                'name' => $request->name,
+                'tel' => $request->tel,
+                'login' => $request->login,
+                'email' => $request->email,
+                'password' => password_hash($request->password, PASSWORD_BCRYPT),
+                'role_id' => $request->role_id,
+                'service_id' => $request->service_id,
+                'suppr' => $request->suppr,
+                'lock' => $request->lock,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            if (!$inserted) {
+                throw new Exception('Erreur lors de l\'insertion dans la table users');
             }
 
             DB::commit();

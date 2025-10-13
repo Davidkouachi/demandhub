@@ -12,7 +12,7 @@ $(document).ready(function() {
 
         globalePage.append(FomulaireAssignDemdande());
         selectRefreshId('#statut');
-        select_demande_assign(true, '#demande_id', user.service_id, $('#statut').val());
+        select_demande_assign('#demande_id', user.service_id, $('#statut').val());
         select_traiteur_service("#traiteur_id", user.service_id);
         dataDayLimite('#date', 'min');
         
@@ -25,7 +25,7 @@ $(document).ready(function() {
 
         console.log(statut);
 
-        select_demande_assign(false,'#demande_id', user.service_id, statut);
+        select_demande_assign('#demande_id', user.service_id, statut);
  
     })
 
@@ -73,7 +73,7 @@ $(document).ready(function() {
     function resetForm() {
         // Réinitialise les champs texte
         $('#statut').val('en_attente').trigger('change'); 
-        $('#traiteur_id').val(null).trigger('change.select2');
+        selectRefreshNull('#traiteur_id');
         $('#date').val(null);
         dataDayLimite('#date', 'min');
     }

@@ -23,7 +23,7 @@ use PHPMailer\PHPMailer\Exception;
 
 class SelectController extends Controller
 {
-    public function select_categories(Request $res)
+    public function select_categories_all(Request $res)
     {
 
         $data = DB::table('categories_demandes')->where('suppr', 0)->select('id','uid','service_id','nom')->get();
@@ -67,4 +67,63 @@ class SelectController extends Controller
         ]);
 
     } 
+
+    public function select_entreprise_all(Request $res)
+    {
+
+        $data = DB::table('entreprises')->where('suppr', 0)->select('id', 'nom')->get();
+
+        return response()->json([ 
+            'data' => $data,
+        ]);
+
+    }
+
+    public function select_role_all(Request $res)
+    {
+
+        $data = DB::table('roles')->where('id', '!=', 1)->where('suppr', 0)->select('id', 'name')->get();
+
+        return response()->json([ 
+            'data' => $data,
+        ]);
+
+    }
+
+    public function select_service_all(Request $res)
+    {
+
+        $data = DB::table('services')
+                    ->where('suppr', 0)
+                    ->select(
+                        'id',
+                        'nom',
+                        'description',
+                        DB::raw('(SELECT COUNT(*) FROM users WHERE users.service_id = services.id AND users.role_id = 2) AS nbre_respo')
+                    )
+                    ->get();
+
+        return response()->json([ 
+            'data' => $data,
+        ]);
+
+    }
+
+    public function select_employe_all(Request $res)
+    {
+
+        $data = DB::table('users')
+                    ->where('suppr', 0)
+                    ->where('role_id', 4)
+                    ->select(
+                        'id',
+                        'name',
+                    )
+                    ->get();
+
+        return response()->json([ 
+            'data' => $data,
+        ]);
+
+    }
 }

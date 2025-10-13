@@ -48,11 +48,11 @@ $(document).ready(function () {
 
         if (inputType === 'datetime-local') {
             $el.attr(mode, dateTime);
-            console.log(`✅ ${mode} défini à ${dateTime} pour un champ datetime-local`);
+            // console.log(`✅ ${mode} défini à ${dateTime} pour un champ datetime-local`);
         } else {
             // sinon, champ type date → uniquement la date
             $el.attr(mode, onlyDate);
-            console.log(`✅ ${mode} défini à ${onlyDate} pour un champ date`);
+            // console.log(`✅ ${mode} défini à ${onlyDate} pour un champ date`);
         }
     };
 
@@ -145,6 +145,14 @@ $(document).ready(function () {
                 value = value.substring(0, int); // Limiter à 10 caractères
             }
             $(this).val(value); // Mettre à jour la valeur nettoyée et limitée
+        });
+    };
+
+    window.textMajuscule = function (id) {
+        var inputElement = $(id); // Sélectionner l'élément avec son ID
+
+        inputElement.on('input', function () {
+            $(this).val($(this).val().toUpperCase());
         });
     };
 

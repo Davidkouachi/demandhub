@@ -10,29 +10,43 @@ $(document).ready(function() {
 
     function initStart()  {
 
-        globalePage.append(FormulaireNewEmploye());
-        textMajuscule('#login');
-        numberTel('#tel');
-        numberTelLimit('#tel', 10);
-        // select_service_all('#service_id', 1);
-        // select_role_all('#role_id');
+        globalePage.append(FormulaireAffecterEmploye());
+        select_service_all('#service_id');
+        select_employe_all('#employe_id');
 
     }
 
-    // $('#role_id').on('change', function(e) {
-    //     e.preventDefault();
-
-    //     const id = $(this).val();
-
-    //     select_service_all('#service_id', id);
- 
-    // });
-
-    $('#formUser').on('submit', function(e) {
+    $('#service_id').on('change', function(e) {
         e.preventDefault();
 
-        const btnId = $('.btnUserForm');
-        const btnLabel = $('.btnUserForm').text(); 
+        const props = getSelecteData('#service_id');
+        console.log(props);
+        
+        if (props.nbre_respo > 0) {
+
+            const msg = "Le " + $(this).text() + " à déjà un responsable, par conséquent, l'employé selectionnez sera le responsable automatiquement"
+
+            confirmAction('Information', msg).then((result) => {
+                if (result.isConfirmed) {
+
+                    
+                } else {
+
+                    selectRefreshNull('#service_id');
+                    selectRefreshNull('#employe_id');
+                    return;
+                }
+            });
+
+            
+        }
+    });
+
+    $('#formulaire').on('submit', function(e) {
+        e.preventDefault();
+
+        const btnId = $('.btnForm');
+        const btnLabel = $('.btnForm').text(); 
 
         const name = $('#name');
         const tel = $('#tel');
