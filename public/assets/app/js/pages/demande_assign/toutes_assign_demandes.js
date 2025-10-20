@@ -82,15 +82,8 @@ $(document).ready(function() {
                             <a href="#!" class="btn btn-warning btn-sm btn-view rounded-2" data-id="${item.id}">
                                 <i class="ri-eye-line align-middle fs-18"></i>
                             </a>
-                            ${item.statut == 'en_attente' ? `
-                                <a href="#!" class="btn btn-soft-dark btn-sm btn-option rounded-pill"
-                                    data-id="${item.id}"
-                                    data-statut="${item.statut}">
-                                    <i class="ri-settings-4-line align-middle fs-18"></i>
-                                </a>
-                            ` : ` `}
-                            ${item.statut == 'en_cours' && item.traiteur_id == user.id ? `
-                                <a href="#!" class="btn btn-info btn-sm btn-view rounded-2" data-id="${item.id}">
+                            ${item.traiter == 1 ? `
+                                <a href="#!" class="btn btn-info btn-sm btn-motif rounded-2" data-id="${item.id}">
                                     <i class="ri-message-line align-middle fs-18"></i>
                                 </a>
                             ` : ` `}
@@ -107,7 +100,7 @@ $(document).ready(function() {
             const id = $(this).data("id");
             console.log("👁️ Voir détails de la demande ID:", id);
 
-            const demande = dataTable.find(item => item.id === id);
+            const demande = dataTable.find(item => item.id == id);
 
             if (!demande) {
                 console.warn("⚠️ Aucune demande trouvée pour cet ID.");
@@ -115,18 +108,58 @@ $(document).ready(function() {
             }
 
             let html = `
-                <div class="p-3">
-                    <h3 class="fw-bold mb-2">${demande.objet}</h3>
-                    <h4><strong>Catégorie :</strong> ${demande.categorie}</h4>
-                    <h4><strong>Date :</strong> ${formatDateHeure(demande.created_at)}</h4>
-                    <h4><strong>Statut :</strong> ${demande.statut === 'en_attente' ? 'En attente' :
-                              demande.statut === 'en_cours'   ? 'En cours' :
-                              demande.statut === 'traitee'    ? 'Terminé' :
-                              demande.statut === 'rejete'     ? 'Rejété' :
-                              demande.statut}</h4>
-                    <h4><strong>Description :</strong> ${demande.description}</h4>
-                    <hr>
-                    <h4>Fichiers liés :</h4>
+                <div class="p-2">
+                   <div class="card-body">
+                        <div class="row my-2">
+                            <div class="col-12 my-2">
+                                  <h4 class="card-title mb-2 text-dark fw-semibold">Identifiant :</h4>
+                                  <p class="mb-0">${demande.uid}</p>
+                             </div>
+                             <div class="col-lg-3 my-2">
+                                  <p class="text-dark fw-semibold fs-16 mb-1">Email :</p>
+                                  <p class="mb-0">${demande.email}</p>
+                             </div>
+                             <div class="col-lg-3 my-2">
+                                  <p class="text-dark fw-semibold fs-16 mb-1">Contact :</p>
+                                  <p class="mb-0">+225 ${demande.tel}</p>
+                             </div>
+                             <div class="col-lg-3 my-2">
+                                  <p class="text-dark fw-semibold fs-16 mb-1">Catégorie :</p>
+                                  <p class="mb-0">${demande.categorie}</p>
+                             </div>
+                             <div class="col-lg-3 my-2">
+                                  <p class="text-dark fw-semibold fs-16 mb-1">Date de réception :</p>
+                                  <p class="mb-0">${formatDateHeure(demande.created_at)}</p>
+                             </div>
+                            <div class="col-12 my-2">
+                                  <h4 class="card-title mb-2 text-dark fw-semibold">Statut :</h4>
+                                  <p class="mb-0">
+                                    <span class="badge bg-${demande.statut === 'en_attente' ? 'primary' :
+                                              demande.statut === 'en_cours'   ? 'warning' :
+                                              demande.statut === 'traitee'    ? 'success' :
+                                              demande.statut === 'rejete'     ? 'danger' :
+                                              demande.statut} text-white fs-14 px-2 py-1">
+                                        ${demande.statut === 'en_attente' ? 'En attente' :
+                                              demande.statut === 'en_cours'   ? 'En cours' :
+                                              demande.statut === 'traitee'    ? 'Terminé' :
+                                              demande.statut === 'rejete'     ? 'Rejété' :
+                                              demande.statut}
+                                    </span>
+                                  </p>
+                             </div>
+                            <div class="col-12 my-2">
+                                  <h4 class="card-title mb-2 text-dark fw-semibold">Objet :</h4>
+                                  <p class="mb-0">${demande.objet}</p>
+                             </div>
+                             <div class="col-12 my-2">
+                                  <h4 class="card-title mb-2 text-dark fw-semibold">Description :</h4>
+                                  <p class="mb-0">${demande.description}</p>
+                             </div>
+                        </div>
+
+                        <div class="row my-2">
+                            <div class="col-12">
+                                  <h4 class="card-title mb-4 text-dark fw-semibold text-left">Fichiers liés :</h4>
             `;
 
             if (Array.isArray(demande.fichiers) && demande.fichiers.length > 0) {
@@ -139,10 +172,9 @@ $(document).ready(function() {
                 for (const [type, files] of Object.entries(grouped)) {
                     const icon = getFileIcon(type);
                     html += `
-                        <div class="mt-3">
-                            <h5 class="text-primary d-flex align-items-center gap-1">
-                                - <i class="${icon}"></i> ${type.toUpperCase()} :
-                            </h5>
+                            <h4 class="card-title mb-2 text-dark fw-semibold text-center">
+                                <i class="${icon}"></i> ${type.toUpperCase()} :
+                            </h4>
                             <ul style="list-style:none; padding:0;">
                     `;
                     files.forEach(file => {
@@ -156,86 +188,99 @@ $(document).ready(function() {
                             </li>
                         `;
                     });
-                    html += `</ul></div>`;
+                    html += `</ul> </div> </div>`;
                 }
             } else {
-                html += `<p class="text-danger mt-2">❌ Aucun fichier lié à cette demande.</p>`;
+                html += `<h4 class="card-title mb-2 text-dark fw-semibold">
+                            ❌ Aucun fichier lié à cette demande.
+                        </h4> </div> </div>`;
             }
 
-            html += `</div>`;
+            html += `</div></div>`;
 
-            showDynamicModal(html, { title: "Détails demande", size: "xl" });
+            const $overlay = showDynamicModal(html, { title: "Détails demande", size: "xl" });
+
+            $(document).off("click", ".btnMotif").on("click", ".btnMotif", function (e) {
+                e.preventDefault();
+
+                $overlay.remove();
+                reponseDemande(demande, 1);
+
+            });
+
+            $(document).off("click", ".btnRejet").on("click", ".btnRejet", function (e) {
+                e.preventDefault();
+
+                $overlay.remove();
+                reponseDemande(demande, 0);
+
+            });
         });
 
-        function getFileIcon(type) {
-            switch (type) {
-                case "pdf":
-                    return "ri-file-pdf-2-line text-danger";
-                case "word":
-                    return "ri-file-word-2-line text-primary";
-                case "excel":
-                    return "ri-file-excel-2-line text-success";
-                case "image":
-                    return "ri-image-2-line text-warning";
-                case "zip":
-                    return "ri-file-zip-line text-orange";
-                case "txt":
-                    return "ri-file-text-line text-secondary";
-                case "ppt":
-                    return "ri-file-ppt-2-line text-danger";
-                default:
-                    return "ri-file-line text-muted";
-            }
-        }
-
-        $(document).off("click", ".btn-option").on("click", ".btn-option", function (e) {
+        $(document).off("click", ".btn-motif").on("click", ".btn-motif", function (e) {
             e.preventDefault();
 
-            const data = {
-                id: $(this).data("id"),
-                statut: $(this).data("statut"),
-            };
+            const id = $(this).data("id");
+            const demande = dataTable.find(item => item.id == id);
 
-            if (data.id) {
-                // Boutons dynamiques selon statut
-                const allButtons = [
-                    { text: "Désigner un traiteur", class: "btn-optionModal-assigne btn-primary", icon: "ri-refresh-line", showFor: ["en_attente"] },
-                    { text: "Traiter la demande", class: "btn-optionModal-traitement btn-warning", icon: "ri-pencil-line", showFor: ["en_attente"] },
-                    { text: "Traitement terminer", class: "btn-optionModal-terminer btn-success", icon: "ri-check-line", showFor: ["en_cours"] },
-                    { text: "Demande rejèter", class: "btn-optionModal-rejeter btn-danger", icon: "ri-close-line", showFor: ["en_cours"] }
-                ];
-                const buttons = allButtons.filter(btn => btn.showFor.includes(data.statut));
-
-                // Afficher overlay d’action
-                const $overlay = showDynamicActionModal(data, buttons);
-
-                // Gestion clic sur les boutons
-                $overlay.find("a").on("click", function(e) {
-                    e.preventDefault();
-                    const id = $(this).data("id");
-                    const action = $(this).attr("class").split(' ')[1];
-                    // console.log("Action:", action, "ID:", id, "Statut:", data.statut);
-
-                    if (action == 'btn-optionModal-assigne') {
-
-                        designeTraiteur(id);
-
-                    } else if (action == 'btn-optionModal-traitement') {
-                        console.log("Traiter la demande");
-                    } else if (action == 'btn-optionModal-terminer') {
-                        console.log("Traitement terminer");
-                    } else if (action == 'btn-optionModal-rejeter') {
-                        console.log("Demande rejèter");
-                    }
-
-                    if (typeof window.handleModalAction === "function") {
-                        window.handleModalAction(action, id, data);
-                    }
-
-                    $overlay.remove(); // fermer après action
-                });
-
+            if (!demande) {
+                console.warn("⚠️ Aucune demande trouvée pour cet ID.");
+                return;
             }
+
+            let actionsHtml = '';
+
+            if (demande.actions && demande.actions.length > 0) {
+                demande.actions.forEach(action => {
+                    actionsHtml += `
+                        <div class="border-bottom pb-3 mt-3">  
+                            <div class="d-flex align-items-center gap-1 mb-2">
+                                <div class="position-relative">
+                                    <img src="assets/app/images/user.png" class="avatar rounded-circle flex-shrink-0 border border-2">
+                                </div>
+                                <div class="d-block ms-2 flex-grow-1">
+                                    <span class="text-dark">
+                                        <a href="#!" class="text-dark fw-medium">${action.traiteur}</a>
+                                    </span>
+                                    <p class="text-muted mb-0">
+                                        <i class="ti ti-calendar-due"></i> ${formatDateHeure(action.date)}
+                                    </p>
+                                </div>
+                                ${action.type == null ? `
+                                <div class="ms-auto">
+                                    <span class="badge px-2 py-1 fs-16 bg-dark">
+                                        ${action.action}
+                                    </span>
+                                </div> ` : `
+                                <div class="ms-auto">
+                                    <span class="badge px-2 py-1 fs-16 bg-${action.type == 0 ? 'danger' : 'success'}">
+                                        ${action.type == 0 ? 'Rejétée' : 'Traitée'}
+                                    </span>
+                                </div>
+                                `}
+                            </div>
+                            <p class="text-dark fw-semibold fs-16 ">Commentaire :</p>
+                            <p class="mt-2 text-muted">${action.commentaire || 'Aucun commentaire'}</p>
+                        </div>
+                    `;
+                });
+            } else {
+                actionsHtml = `
+                    <div class="border-bottom pb-3">
+                        <p class="text-muted mb-0">Aucune action trouvée pour cette demande.</p>
+                    </div>
+                `;
+            }
+
+
+            let html = `
+                <div class="p-2">
+                   <div class="card-body">
+                        ${actionsHtml}
+                    </div>
+                </div>`;
+
+            const $overlay = showDynamicModal(html, { title: "Détails traitement", size: "xl" });
 
         });
 

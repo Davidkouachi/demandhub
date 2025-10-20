@@ -20,7 +20,7 @@ $(document).ready(function () {
     function pageLoader(dataPage) {
         globalPage.attr('data-page', dataPage);
         globalPage.empty();
-        globalPage.css('height', '100%');
+        // globalPage.css('height', '100%');
 
         globalPage.html(`
             <div id="pageLoader active">
@@ -34,18 +34,45 @@ $(document).ready(function () {
         `);
     }
 
-    function pageTitre(titre, stitle) {
+    // function pageTitre(titre, stitle) {
+    //     globalPage.append(`
+    //         <div class="row">
+    //             <div class="col-12">
+    //                 <div class="page-title-box">
+    //                     <ol class="breadcrumb mb-0">
+    //                         ${stitle != null ? `<li class="breadcrumb-item">${stitle}</li>` : ``}
+    //                         <li class="breadcrumb-item active">${titre}</li>
+    //                     </ol>
+    //                 </div>
+    //             </div>
+    //         </div>
+    //     `);
+    // }
+
+    function pageContent(titre, stitle, page) {
+        localStorage.setItem("pageHeader", JSON.stringify({
+            titre: titre,
+            stitle: stitle,
+        }));
+        loadScriptForPage(page);
+    }
+
+    function pageContentVide() {
+
+        const data = JSON.parse(localStorage.getItem("pageHeader")) || null;
+
         globalPage.append(`
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box">
                         <ol class="breadcrumb mb-0">
-                            ${stitle != null ? `<li class="breadcrumb-item">${stitle}</li>` : ``}
-                            <li class="breadcrumb-item active">${titre}</li>
+                            ${data.stitle != null ? `<li class="breadcrumb-item">${data.stitle}</li>` : ``}
+                            <li class="breadcrumb-item active">${data.titre}</li>
                         </ol>
                     </div>
                 </div>
             </div>
+            ${pageMaintenance()}
         `);
     }
 
@@ -61,8 +88,10 @@ $(document).ready(function () {
             globalPage.css('height', '');
             pageTimeout = null;
 
-            pageTitre(title, stitle);
-            loadScriptForPage(page);
+            // pageTitre(title, stitle);
+            // loadScriptForPage(page);
+
+            pageContent(title, stitle, page);
         }, 1000);
 
         document.title = `${title} | DemandHub`;
@@ -101,7 +130,7 @@ $(document).ready(function () {
         const allVisited = JSON.parse(localStorage.getItem("lastVisitedPage")) || null;
 
         // 2️⃣ - Filtre par userId
-        const lastVisited = allVisited?.userId === user.id ? allVisited : null;
+        const lastVisited = allVisited?.userId == user.id ? allVisited : null;
 
         // 3️⃣ - Lit le paramètre "page" visible dans l’URL (ex: ?page=Tableau de bord)
         const titleFromUrl = getPageFromUrl();
@@ -150,6 +179,9 @@ $(document).ready(function () {
             mes_demandes_historique: [
                 url_base + "/assets/app/js/pages/mes_demandes/mes_demandes_historique.js",
             ],
+            mes_demandes_traitees_rejetees: [
+                url_base + "/assets/app/js/pages/mes_demandes/mes_demandes_traitees_rejetees.js",
+            ],
 
             toutes_demandes_recu: [
                 url_base + "/assets/app/js/pages/demande_recu/toutes_demandes_recu.js",
@@ -162,12 +194,18 @@ $(document).ready(function () {
             toutes_assign_demandes: [
                 url_base + "/assets/app/js/pages/demande_assign/toutes_assign_demandes.js",
             ],
+            demandes_assign_cours: [
+                url_base + "/assets/app/js/pages/demande_assign/demandes_assign_cours.js",
+            ],
 
             ajouter_employe: [
                 url_base + "/assets/app/js/pages/utilisateur/ajouter_employe.js",
             ],
             affecter_employe_service: [
                 url_base + "/assets/app/js/pages/utilisateur/affecter_employe_service.js",
+            ],
+            changer_responsable: [
+                url_base + "/assets/app/js/pages/utilisateur/changer_responsable.js",
             ],
         };
 
@@ -182,7 +220,11 @@ $(document).ready(function () {
 
         // Charge uniquement les scripts de la page demandée
         const scripts = scriptMap[page];
-        if (!scripts) return;
+        if (!scripts) {
+
+            pageContentVide(); 
+            return;
+        } 
 
         scripts.forEach(scriptUrl => {
             const script = document.createElement("script");

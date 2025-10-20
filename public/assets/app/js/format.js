@@ -434,4 +434,25 @@ $(document).ready(function () {
         return $overlay;
     };
 
+    window.getFileIcon = function(type) {
+        switch (type) {
+            case "pdf":
+                return "ri-file-pdf-2-line text-danger";
+            case "word":
+                return "ri-file-word-2-line text-primary";
+            case "excel":
+                return "ri-file-excel-2-line text-success";
+            case "image":
+                return "ri-image-2-line text-warning";
+            case "zip":
+                return "ri-file-zip-line text-orange";
+            case "txt":
+                return "ri-file-text-line text-secondary";
+            case "ppt":
+                return "ri-file-ppt-2-line text-danger";
+            default:
+                return "ri-file-line text-muted";
+        }
+    }
+
 });

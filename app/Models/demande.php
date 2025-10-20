@@ -15,6 +15,7 @@ class demande extends Model
         'objet',
         'description',
         'statut',
+        'traiter',
         'suppr',
         'date_suppr',
     ];

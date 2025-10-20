@@ -3,9 +3,6 @@ $(document).ready(function () {
     const emailVerif = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     const loginPage = `
-        <div class="text-center">
-            <p class="text-muted mt-2">Plateforme de gestion des demandes</p>
-        </div>
         <div class="text-center div_alert"></div>
         <form class="mt-4 pt-2" id="formLogin">
             <div class="mb-3">
@@ -49,9 +46,6 @@ $(document).ready(function () {
     `;
 
     const passwordPage = `
-        <div class="text-center">
-            <p class="text-muted mt-2">Plateforme de gestion des demandes</p>
-        </div>
         <form class="mt-4 pt-2" action="">
             <div class="mb-3">
                 <label class="form-label">Email</label>

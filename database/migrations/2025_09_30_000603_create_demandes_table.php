@@ -17,10 +17,12 @@ return new class extends Migration
             $table->integer('user_id');
             $table->integer('traiteur_id')->nullable();
             $table->datetime('date_limite')->nullable();
+            $table->datetime('date_traiter')->nullable();
             $table->integer('categorie_id');
             $table->string('objet');
             $table->text('description')->nullable();
             $table->enum('statut', ['en_attente', 'en_cours', 'traitee', 'rejete'])->default('en_attente');
+            $table->boolean('traiter')->default(false);
             $table->boolean('suppr')->default(false);
             $table->datetime('date_suppr')->nullable();
             $table->timestamps();

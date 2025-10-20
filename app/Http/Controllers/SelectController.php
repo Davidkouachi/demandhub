@@ -47,19 +47,17 @@ class SelectController extends Controller
         return response()->json([ 
             'data' => $data,
         ]);
-
     }
 
     public function select_demande_assign(Request $res, $service_id, $statut)
     {
         $data = DB::table('demandes')
-                    ->join('users', 'users.id', '=', 'demandes.user_id')
                     ->join('categories_demandes', 'categories_demandes.id', '=', 'demandes.categorie_id')
                     ->join('services', 'services.id', '=', 'categories_demandes.service_id')
                     ->where('services.id', $service_id)
                     ->where('demandes.suppr', 0)
                     ->where('demandes.statut', $statut)
-                    ->select('demandes.id','demandes.objet','users.name')
+                    ->select('demandes.id','demandes.objet','demandes.uid')
                     ->get();
 
         return response()->json([ 
@@ -99,7 +97,8 @@ class SelectController extends Controller
                         'id',
                         'nom',
                         'description',
-                        DB::raw('(SELECT COUNT(*) FROM users WHERE users.service_id = services.id AND users.role_id = 2) AS nbre_respo')
+                        DB::raw('(SELECT COUNT(*) FROM users WHERE users.service_id = services.id AND users.role_id = 2) AS nbre_respo'),
+                        DB::raw('(SELECT COUNT(*) FROM users WHERE users.service_id = services.id AND users.role_id = 3) AS nbre_traiteur')
                     )
                     ->get();
 

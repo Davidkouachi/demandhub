@@ -11,17 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('demande_actions', function (Blueprint $table) {
+        Schema::create('traitements', function (Blueprint $table) {
             $table->id();
             $table->string('uid')->unique()->index();
-            $table->integer('demande_id');
-            $table->integer('user_id'); // celui qui agit
-            $table->string('action'); // ex: assigné, commentaire, clôture
-            $table->text('commentaire')->nullable();
-            $table->integer('type')->nullable();
+            $table->string('demande_uid');
+            $table->text('motif');
+            $table->string('traiteur_id');
+            $table->boolean('suppr')->default(false);
             $table->timestamps();
         });
-
     }
 
     /**
@@ -29,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('demande_actions');
+        Schema::dropIfExists('traitements');
     }
 };

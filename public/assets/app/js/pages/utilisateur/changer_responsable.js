@@ -10,9 +10,9 @@ $(document).ready(function() {
 
     function initStart()  {
 
-        globalePage.append(FormulaireAffecterEmploye());
-        select_service_all('#service_id');
-        select_employe_all('#employe_id');
+        globalePage.append(FormulaireChangerRespo());
+        select_service_all("#service_id");
+        selectRefreshId("#traiteur_id");
 
     }
 
@@ -27,19 +27,45 @@ $(document).ready(function() {
         if (props.id == 0) return;
 
         if (props.nbre_respo == 0) {
+            
+
             const msg = "Le " + $('#service_id option:selected').text() +
-                        " n'a pas de responsable, par conséquent, l'employé sélectionné sera le responsable automatiquement";
+                        " n'a pas de responsable.";
+
+            showAlert(
+                "Attention", 
+                msg, 
+                "info"
+            );
+
+            return;
+
+        } else if (props.nbre_traiteur == 0) {
+            
+
+            const msg = "Le " + $('#service_id option:selected').text() +
+                        " n'a pas de traiteurs de demandes. voulez-vous créer un nouvel employé ?";
 
             confirmAction('Information', msg).then((result) => {
                 if (result.isConfirmed) {
-                    // Action confirmée
+                    
+                    $btn = $('#submenu-ajouter_employe');
+                    if ($btn.length) {
+                        console.log('ok');
+                        $btn.trigger("click");
+                    }
+
                 } else {
-                    // Réinitialise le select sans trigger de changement
+
                     selectRefreshNull('#service_id');
-                    selectRefreshNull('#employe_id');
-                    return;
                 }
             });
+
+            return;
+
+        } else {
+
+            select_traiteur_service('#traiteur_id', props.id);
         }
 
     });
@@ -51,17 +77,10 @@ $(document).ready(function() {
         const btnId = $('.btnForm');
         const btnLabel = $('.btnForm').text(); 
 
-        const employe_id = $('#employe_id');
+        const traiteur_id = $('#traiteur_id');
         const service_id = $('#service_id');
 
-        const props = selectExtraitData($('#service_id').val());
-        let role_id = 3;
-
-        if (props.nbre_repos > 0) {
-            role_id = 2;
-        }
-
-        if (employe_id.val() == '0' || service_id.val() == '0') {
+        if (traiteur_id.val() == '0' || service_id.val() == '0') {
 
             showAlert(
                 "Attention", 
@@ -72,9 +91,11 @@ $(document).ready(function() {
             return;
         }
 
+        const props = selectExtraitData($('#service_id').val());
+
         spinerButton(0, btnId, 'Vérification en cours');
 
-        const urlAxios = `${url}/api/UpdateAffecterService/${employe_id.val()}/${props.id}/${role_id}`;
+        const urlAxios = `${url}/api/UpdateChangeRespo/${traiteur_id.val()}/${props.id}`;
 
         reqAxios(1, urlAxios,'PUT',{},btnId,btnLabel)
             .then(res => {
@@ -87,7 +108,7 @@ $(document).ready(function() {
     function resetForm() {
         // Réinitialise les champs texte
         select_service_all('#service_id');
-        select_employe_all('#employe_id');
+        selectRefreshNull('#traiteur_id');
     }
 
 });

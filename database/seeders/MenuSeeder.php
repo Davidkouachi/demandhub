@@ -53,7 +53,7 @@ class MenuSeeder extends Seeder
             ['id' => 2, 'name' => 'Créer une demande', 'slug' => 'creer_demande', 'icon' => 'ri-add-circle-line', 'is_dropdown' => false, 'parent_id' => null, 'order' => 2],
             ['id' => 3, 'name' => 'Demandes Recu', 'slug' => 'demandes_recu', 'icon' => 'ri-list-check-2', 'is_dropdown' => true, 'parent_id' => null, 'order' => 3],
             ['id' => 4, 'name' => 'Affecter une demande', 'slug' => 'affecter_demande', 'icon' => 'ri-user-shared-line', 'is_dropdown' => false, 'parent_id' => null, 'order' => 4],
-            ['id' => 5, 'name' => 'Demandes assignées', 'slug' => 'demandes_assignees', 'icon' => 'ri-task-line', 'is_dropdown' => true, 'parent_id' => null, 'order' => 5],
+            ['id' => 5, 'name' => 'Demandes', 'slug' => 'demandes_assignees', 'icon' => 'ri-task-line', 'is_dropdown' => true, 'parent_id' => null, 'order' => 5],
             ['id' => 6, 'name' => 'Mes Demandes', 'slug' => 'mes_demandes', 'icon' => 'ri-file-list-line', 'is_dropdown' => true, 'parent_id' => null, 'order' => 6],
             ['id' => 7, 'name' => 'Services', 'slug' => 'gestion_services', 'icon' => 'ri-building-2-line', 'is_dropdown' => true, 'parent_id' => null, 'order' => 7],
             ['id' => 8, 'name' => 'Utilisateurs', 'slug' => 'utilisateurs', 'icon' => 'ri-user-3-line', 'is_dropdown' => true, 'parent_id' => null, 'order' => 8],
@@ -87,18 +87,16 @@ class MenuSeeder extends Seeder
 
             //Demandes recu
             ['name' => 'Toutes les demandes', 'slug' => 'toutes_demandes_recu', 'parent_id' => 3, 'order' => 1],
-            ['name' => 'Demandes en cours', 'slug' => 'demandes_cours', 'parent_id' => 3, 'order' => 2],
-            ['name' => 'Demandes traitées / rejetées', 'slug' => 'demandes_traitees_rejetees', 'parent_id' => 3, 'order' => 3],
+            ['name' => 'Demandes assignées', 'slug' => 'toutes_assign_demandes', 'parent_id' => 3, 'order' => 2],
 
             // Demandes assignées
-            ['name' => 'Liste des Demandes', 'slug' => 'toutes_assign_demandes', 'parent_id' => 5, 'order' => 1],
-            ['name' => 'Demandes en cours', 'slug' => 'demandes_assign_cours', 'parent_id' => 5, 'order' => 2],
-            ['name' => 'Demandes traitées / rejetées', 'slug' => 'demandes_assign_traitees', 'parent_id' => 5, 'order' => 3],
+            ['name' => 'Demandes en cours', 'slug' => 'demandes_assign_cours', 'parent_id' => 5, 'order' => 1],
+            ['name' => 'Demandes traitées / rejetées', 'slug' => 'demandes_assign_traitees', 'parent_id' => 5, 'order' => 2],
 
             // Mes Demandes
             ['name' => 'Historique demandes', 'slug' => 'mes_demandes_historique', 'parent_id' => 6, 'order' => 1],
             ['name' => 'Demandes en cours', 'slug' => 'mes_demandes_cours', 'parent_id' => 6, 'order' => 2],
-            ['name' => 'Demandes traitées / rejetées', 'slug' => 'mes_demandes_traitees_rejetees', 'parent_id' => 6, 'order' => 3],
+            ['name' => 'Demandes traitées', 'slug' => 'mes_demandes_traitees_rejetees', 'parent_id' => 6, 'order' => 3],
 
             // Services
             ['name' => 'Créer un service', 'slug' => 'creer_service', 'parent_id' => 7, 'order' => 1],
@@ -108,7 +106,7 @@ class MenuSeeder extends Seeder
             ['name' => 'Créer un employé', 'slug' => 'ajouter_employe', 'parent_id' => 8, 'order' => 1],
             ['name' => 'Liste des employés', 'slug' => 'liste_employes', 'parent_id' => 8, 'order' => 2],
             ['name' => 'Affecter un employé à un service', 'slug' => 'affecter_employe_service', 'parent_id' => 8, 'order' => 3],
-            ['name' => 'Nommer / Changer responsable de service', 'slug' => 'changer_responsable', 'parent_id' => 8, 'order' => 4],
+            ['name' => 'Changer responsable de service', 'slug' => 'changer_responsable', 'parent_id' => 8, 'order' => 4],
             ['name' => 'Changer les accès', 'slug' => 'changer_acces', 'parent_id' => 8, 'order' => 5],
 
             // Statistiques & rapports (autres sous-menus)
@@ -119,9 +117,9 @@ class MenuSeeder extends Seeder
             ['name' => 'Changer de mot de passe', 'slug' => 'update_password', 'parent_id' => 14, 'order' => 1],
 
             // Service respo
-            ['name' => 'Créer un employé', 'slug' => 'ajouter_employe_respo', 'parent_id' => 15, 'order' => 1],
-            ['name' => 'Liste des employés', 'slug' => 'liste_employes_respo', 'parent_id' => 15, 'order' => 2],
-            ['name' => 'Changer les accès', 'slug' => 'changer_acces_respo', 'parent_id' => 15, 'order' => 3],
+            ['name' => 'Créer un traiteur', 'slug' => 'ajouter_traiteur', 'parent_id' => 15, 'order' => 1],
+            ['name' => 'Liste des traiteur', 'slug' => 'liste_traiteur', 'parent_id' => 15, 'order' => 2],
+            ['name' => 'Changer les accès', 'slug' => 'changer_acces_traiteur', 'parent_id' => 15, 'order' => 3],
         ];
 
 
@@ -152,22 +150,17 @@ class MenuSeeder extends Seeder
             'tableau_de_bord', 
             'demandes_recu', 
                 'toutes_demandes_recu',
-                'demandes_cours', 
-                'demandes_traitees_rejetees',
-            'affecter_demande', 
-            'demandes_assignees',
                 'toutes_assign_demandes', 
-                'demandes_assign_cours', 
-                'demandes_assign_traitees',                 
+            'affecter_demande',                
             'liste_employes', 
                 'ajouter_employe', 
                 'changer_responsable', 
             'statistiques',
                 'vue_rapide_demandes',
             'gestion_service_respo',
-                'ajouter_employe_respo',
-                'liste_employes_respo',
-                'changer_acces_respo',
+                'ajouter_traiteur',
+                'liste_traiteur',
+                'changer_acces_traiteur',
             'categories_demandes', 
             'suivi',
             'parametres',

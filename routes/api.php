@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SelectController;
 use App\Http\Controllers\InsertController;
+use App\Http\Controllers\UpdateController;
 use App\Http\Controllers\ListeController;
 use App\Http\Controllers\DeleteController;
 
@@ -30,16 +31,18 @@ Route::middleware(['web', 'checkAuth'])->group(function () {
         Route::post('/InsertDemandes/{user_id}', [InsertController::class, 'InsertDemandes']);
         Route::post('/InsertDesigneTraiteur/{respo_id}/{demande_id}', [InsertController::class, 'InsertDesigneTraiteur']);
         Route::post('/InsertUser', [InsertController::class, 'InsertUser']);
+        Route::post('/InsertTraitement/{user_id}/{demande_id}/{type}', [InsertController::class, 'InsertTraitement']);
     // insert end
 
     // list start 
-        Route::get('/ListeMesDemandes/{user_id}/{statut?}', [ListeController::class, 'ListeMesDemandes']);
+        Route::get('/ListeMesDemandes/{user_id}/{statut?}/{traiter?}', [ListeController::class, 'ListeMesDemandes']);
         Route::get('/ListeDemandesRecu/{user_id}/{role_id}/{service_id}/{statut?}', [ListeController::class, 'ListeDemandesRecu']);
-        Route::get('/ListeDemandesAssign/{user_id}/{service_id}/{statut?}', [ListeController::class, 'ListeDemandesAssign']);
+        Route::get('/ListeDemandesAssign/{user_id}/{service_id}/{statut?}/{traiteur?}', [ListeController::class, 'ListeDemandesAssign']);
     // list end
 
     // update start 
-
+        Route::put('/UpdateAffecterService/{employe_id}/{service_id}/{role_id}', [UpdateController::class, 'UpdateAffecterService']);
+        Route::put('/UpdateChangeRespo/{employe_id}/{service_id}', [UpdateController::class, 'UpdateChangeRespo']);
     // update end
 
     // delete start 

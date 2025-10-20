@@ -61,6 +61,25 @@ class InsertController extends Controller
         }, 5); // tentatives en cas de blocage concurrent
     }
 
+    public function generateUniqueTraitement()
+    {
+        return DB::transaction(function () {
+            $anneeCourte = date('y'); // 2 derniers chiffres de l'année, ex: 25
+            $prefixe = 'TRAIT' . $anneeCourte; // ex: DEM25
+
+            do {
+                // Générer 6 chiffres aléatoires
+                $numero = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+                $matricule = $prefixe . '-' . $numero;
+
+                // Vérifier si ce matricule existe déjà
+                $exists = DB::table('demande_actions')->where('uid', $matricule)->lockForUpdate()->exists();
+            } while ($exists); // Réessayer tant que doublon
+
+            return $matricule;
+        }, 5); // tentatives en cas de blocage concurrent
+    }
+
 
 
 
@@ -160,7 +179,7 @@ class InsertController extends Controller
 
             return response()->json([
                 'success' => true,
-                'msg' => 'Demande enregistrée avec succès ✅'
+                'msg' => 'Opération éffectuée avec succès'
             ], 200);
 
         } catch (Exception $e) {
@@ -222,7 +241,7 @@ class InsertController extends Controller
 
             return response()->json([
                 'success' => true,
-                'msg' => 'Demande enregistrée avec succès ✅'
+                'msg' => 'Opération éffectuée avec succès'
             ], 200);
 
         } catch (Exception $e) {
@@ -287,8 +306,8 @@ class InsertController extends Controller
                 'login' => $request->login,
                 'email' => $request->email,
                 'password' => password_hash($request->password, PASSWORD_BCRYPT),
-                'role_id' => $request->role_id,
-                'service_id' => $request->service_id,
+                'role_id' => 4,
+                'service_id' => 0,
                 'suppr' => $request->suppr,
                 'lock' => $request->lock,
                 'created_at' => now(),
@@ -303,7 +322,79 @@ class InsertController extends Controller
 
             return response()->json([
                 'success' => true,
-                'msg' => 'Demande enregistrée avec succès ✅'
+                'msg' => 'Opération éffectuée avec succès'
+            ], 200);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'error' => true,
+                'msg' => 'Échec de l\'opération',
+                'details' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function InsertTraitement(Request $request, $user_id, $demande_id, $type)
+    {
+        // ✅ Validation complète
+        $validator = Validator::make($request->all(), [
+            'motif' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            Log::info($validator->errors());
+            return response()->json([
+                'info' => true,
+                'msg' => 'Formulaire non valide',
+                'errors' => $validator->errors()
+            ], 201);
+        }
+
+        DB::beginTransaction();
+
+        try {
+            // ✅ Insertion de la demande
+            $uid = $this->generateUniqueTraitement();
+
+            if ($type == 0) {
+                $statut = 'rejete';
+            } else if ($type == 1) {
+                $statut = 'traitee';
+            }
+
+            $inserted = DB::table('demande_actions')->insert([
+                'uid' => $uid,
+                'demande_id' => $demande_id,
+                'action' => 'Traitement de la demande',
+                'user_id' => $user_id,
+                'commentaire' => $request->motif,
+                'type' => $type,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            if (!$inserted) {
+                throw new Exception('Erreur lors de l\'insertion dans la table demande_actions');
+            }
+
+            $insertedU = DB::table('demandes')->where('id', $demande_id)->update([
+                'statut' => $statut,
+                'date_traiter' => now(),
+                'traiter' => 1,
+                'updated_at' => now(),
+            ]);
+
+            if (!$insertedU) {
+                throw new Exception('Erreur lors de l\'insertion dans la table demandes');
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'msg' => 'Opération éffectuée avec succès'
             ], 200);
 
         } catch (Exception $e) {

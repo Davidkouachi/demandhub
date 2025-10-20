@@ -1,6 +1,61 @@
 $(document).ready(function () {
 
+    window.pageTitre = function () {
+
+        const data = JSON.parse(localStorage.getItem("pageHeader")) || null;
+
+        globalPage.append(`
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box">
+                        <ol class="breadcrumb mb-0">
+                            ${data.stitle != null ? `<li class="breadcrumb-item">${data.stitle}</li>` : ``}
+                            <li class="breadcrumb-item active">${data.titre}</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        `);
+    }
+
+    window.pageMaintenance = function () {
+        
+        const div = `        
+            <div class="account-pages pt-2 pt-sm-5 pb-4 pb-sm-5">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-xl-12">
+                            <div class="card auth-card">
+                                <div class="card-body p-0">
+                                    <div class="row align-items-center g-0">
+                                        <div class="col-12">
+                                            <div class="p-4">
+                                                <div class="mx-auto mb-5 text-center auth-logo">
+                                                    <img height="250" width="250" class="img-fluid" src="assets/images/maintenance.svg"/>
+                                                </div>
+                                                <h2 class="fw-bold text-center lh-base">
+                                                    En cours de maintenance ...
+                                                </h2>
+                                                <p class="text-muted text-center mt-1 mb-4">
+                                                    Veuillez patienter ou revenir plutard.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        return div;
+    }
+    
     window.Dashboard = function () {
+
+        pageTitre();
         
         const div = `        
             <div class="row">
@@ -85,6 +140,8 @@ $(document).ready(function () {
     // Mes demandes -------------------------------------------------------------------------------------------
 
     window.FomulaireDemdande = function () {
+
+        pageTitre();
         
         const div = `        
             <div class="row">
@@ -156,6 +213,8 @@ $(document).ready(function () {
     }
 
     window.ListeMesDemdandesEnCours = function () {
+
+        pageTitre();
         
         const div = `        
             <div class="row">
@@ -213,7 +272,81 @@ $(document).ready(function () {
         return div;
     }
 
+    window.ListeMesDemdandesTraiter = function () {
+
+        pageTitre();
+        
+        const div = `        
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center border-bottom">
+                            <div>
+                                <h4 class="card-title">
+                                    Liste des demandes Traitées
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="card-header d-flex justify-content-between align-items-center border-bottom">
+                            <div>
+                                <div class="app-search me-auto">
+                                   <div class="position-relative">
+                                        <input type="search" id="searchInput" class="form-control form-control-sm border-1 rounded-3" placeholder="Rechercher..." autocomplete="off" value="">
+                                        <i class="ri-search-line search-widget-icon"></i>
+                                   </div>
+                              </div>
+                            </div>
+                            <div>
+                                <a class="btn btn-outline-warning rounded-pill btnActualiser">
+                                    Actualiser
+                                    <i class="ri-refresh-line"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-header border-bottom">
+                            <div class="row g-3 paraTable" >
+                                <div class="col-md-3">
+                                    <label class="form-label">Statut</label>
+                                    <select class="form-control" data-choices id="statut">
+                                        <option selected value="0">Tout</option>
+                                        <option value="traitee" >Traitée</option>
+                                        <option value="rejete" >Rejété</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table align-middle text-nowrap table-hover table-centered mb-0" id="tableDemandeTraiter">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th class="text-center" >N°</th>
+                                            <th class="text-center" >Objet</th>
+                                            <th class="text-center" >Catégorie</th>
+                                            <th class="text-center" >Service</th>
+                                            <th class="text-center" >Statuts</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination justify-content-end mb-0" id="pagination"></ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        return div;
+    }
+
     window.ListeMesDemdandes = function () {
+
+        pageTitre();
         
         const div = `        
             <div class="row">
@@ -262,7 +395,7 @@ $(document).ready(function () {
                                     <thead class="table-dark">
                                         <tr>
                                             <th class="text-center" >N°</th>
-                                            <th class="text-center" >Objet</th>
+                                            <th class="text-center" >Identifiant</th>
                                             <th class="text-center" >Catégorie</th>
                                             <th class="text-center" >Service</th>
                                             <th class="text-center" >Statuts</th>
@@ -291,6 +424,8 @@ $(document).ready(function () {
     // Demande recu -------------------------------------------------------------------------------------------
 
     window.ListeDemdandesRecu = function () {
+
+        pageTitre();
         
         const div = `        
             <div class="row">
@@ -368,6 +503,8 @@ $(document).ready(function () {
     // Assigner demande-------------------------------------------------------------------------------------------
 
     window.FomulaireAssignDemdande = function () {
+
+        pageTitre();
         
         const div = `        
             <div class="row">
@@ -421,6 +558,8 @@ $(document).ready(function () {
     // Demande assigner -------------------------------------------------------------------------------------------
 
     window.ListeDemdandesAssign = function () {
+
+        pageTitre();
         
         const div = `        
             <div class="row">
@@ -494,9 +633,75 @@ $(document).ready(function () {
         return div;
     }
 
+    window.ListeDemdandesAssignEnCours = function () {
+
+        pageTitre();
+        
+        const div = `        
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center border-bottom">
+                            <div>
+                                <h4 class="card-title">
+                                    Liste des demandes en cours
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="card-header d-flex justify-content-between align-items-center border-bottom">
+                            <div>
+                                <div class="app-search me-auto">
+                                   <div class="position-relative">
+                                        <input type="search" id="searchInput" class="form-control form-control-sm border-1 rounded-3" placeholder="Rechercher..." autocomplete="off" value="">
+                                        <i class="ri-search-line search-widget-icon"></i>
+                                   </div>
+                              </div>
+                            </div>
+                            <div>
+                                <a class="btn btn-outline-warning rounded-pill btnActualiser">
+                                    Actualiser
+                                    <i class="ri-refresh-line"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table align-middle text-nowrap table-hover table-centered mb-0" id="tableDemandeAssignEnCours">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th class="text-center" >N°</th>
+                                            <th class="text-center" >Nom et Prénoms</th>
+                                            <th class="text-center" >Objet</th>
+                                            <th class="text-center" >Catégorie</th>
+                                            <th class="text-center" >Statuts</th>
+                                            <th class="text-center" >Fichier(s)</th>
+                                            <th class="text-center" >Date</th>
+                                            <th class="text-center" >Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination justify-content-end mb-0" id="pagination"></ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        return div;
+    }
+
     // users -------------------------------------------------------------------------------------------
 
     window.FormulaireNewEmploye = function () {
+
+        pageTitre();
+
         const div = `
         <div class="row">
             <div class="col-12">
@@ -566,12 +771,15 @@ $(document).ready(function () {
     }
 
     window.FormulaireAffecterEmploye = function () {
+
+        pageTitre();
+
         const div = `
         <div class="row">
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title mb-1 anchor">Création d'un utilisateur</h5>
+                        <h5 class="card-title mb-1 anchor">Formulaire</h5>
                         <p class="text-muted">Veuillez renseigner tous les champs et vérifier les informations avant de valider.
                          NB: Lorsque l'on affecte un employé a un service, automatiquement celui-ci devient un traiteur de demande dans le service en question.</p>
 
@@ -586,6 +794,48 @@ $(document).ready(function () {
                                 <div class="col-md-6">
                                     <label class="form-label">Service</label>
                                     <select class="form-control" data-choices id="service_id"></select>
+                                </div>
+
+                                <div class="col-12">
+                                    <button class="btn btn-primary btnForm" type="submit">Valider</button>
+                                </div>
+
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+
+        return div;
+    }
+
+    window.FormulaireChangerRespo = function () {
+
+        pageTitre();
+
+        const div = `
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title mb-1 anchor">Formulaire</h5>
+                        <p class="text-muted">Veuillez renseigner tous les champs et vérifier les informations avant de valider.
+                         NB: Lorsque l'on change de responsable, l'ancien responsable deviendra un traiteur de demandes.</p>
+
+                        <div class="mb-3">
+                            <form class="row g-3" id="formulaire">
+
+                                <div class="col-md-6">
+                                    <label class="form-label">Service</label>
+                                    <select class="form-control" data-choices id="service_id"></select>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">Traiteur</label>
+                                    <select class="form-control" data-choices id="traiteur_id"></select>
                                 </div>
 
                                 <div class="col-12">

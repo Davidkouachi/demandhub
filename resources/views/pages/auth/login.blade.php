@@ -42,6 +42,9 @@
                         </a>
                     </div>
                     <h2 class="fw-bold text-uppercase text-center fs-18 mb-1">DemandHub</h2>
+                    <div class="text-center">
+                        <p class="text-muted mt-2">Système de Gestion Intégré</p>
+                    </div>
                     <div id="contentPage"></div>
                 </div>
             </div>

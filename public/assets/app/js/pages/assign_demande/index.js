@@ -23,8 +23,6 @@ $(document).ready(function() {
 
         const statut = $(this).val();
 
-        console.log(statut);
-
         select_demande_assign('#demande_id', user.service_id, statut);
  
     })
