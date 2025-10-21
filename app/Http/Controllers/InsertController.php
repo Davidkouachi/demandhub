@@ -80,6 +80,44 @@ class InsertController extends Controller
         }, 5); // tentatives en cas de blocage concurrent
     }
 
+    public function generateUniqueService()
+    {
+        return DB::transaction(function () {
+            $anneeCourte = date('y'); // 2 derniers chiffres de l'année, ex: 25
+            $prefixe = 'SER' . $anneeCourte; // ex: DEM25
+
+            do {
+                // Générer 6 chiffres aléatoires
+                $numero = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+                $matricule = $prefixe . '-' . $numero;
+
+                // Vérifier si ce matricule existe déjà
+                $exists = DB::table('services')->where('uid', $matricule)->lockForUpdate()->exists();
+            } while ($exists); // Réessayer tant que doublon
+
+            return $matricule;
+        }, 5); // tentatives en cas de blocage concurrent
+    }
+
+    public function generateUniqueCategorie()
+    {
+        return DB::transaction(function () {
+            $anneeCourte = date('y'); // 2 derniers chiffres de l'année, ex: 25
+            $prefixe = 'CATEG' . $anneeCourte; // ex: DEM25
+
+            do {
+                // Générer 6 chiffres aléatoires
+                $numero = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+                $matricule = $prefixe . '-' . $numero;
+
+                // Vérifier si ce matricule existe déjà
+                $exists = DB::table('categories_demandes')->where('uid', $matricule)->lockForUpdate()->exists();
+            } while ($exists); // Réessayer tant que doublon
+
+            return $matricule;
+        }, 5); // tentatives en cas de blocage concurrent
+    }
+
 
 
 
@@ -279,19 +317,27 @@ class InsertController extends Controller
             ], 201);
         }
 
-        // $rechService = DB::table('users')
-        //             ->where('role_id', 2)
-        //             ->where('service_id', $request->service_id)
-        //             ->count();
+        $verifications = [
+            'tel' => $request->tel,
+            'login' => $request->login,
+            'email' => $request->email,
+        ];
 
-        // if (($rechService > 0) && $request->role_id == 2) {
+        $Exist = DB::table('users')->where(function ($query) use ($verifications) {
+            $query->where('tel', $verifications['tel'])
+                    ->where('login', $verifications['login'])
+                    ->where('email', $verifications['email']);
+        })->first();
 
-        //     return response()->json([
-        //         'info' => true,
-        //         'msg' => 'Ce service à déjà un responsable',
-        //         'errors' => ''
-        //     ], 201);
-        // }
+        if ($Exist) {
+            if ($Exist->tel === $verifications['tel']) {
+                return response()->json(['success' => false, 'msg' => 'Ce numéro de télèphone existe déjà'], 201);
+            } elseif ($Exist->login === $verifications['login']) {
+                return response()->json(['success' => false, 'msg' => 'Le login existe déjà'], 201);
+            } elseif ($Exist->email === $verifications['email']) {
+                return response()->json(['success' => false, 'msg' => 'L\'email existe déjà'], 201);
+            }
+        }
 
         DB::beginTransaction();
 
@@ -388,6 +434,130 @@ class InsertController extends Controller
 
             if (!$insertedU) {
                 throw new Exception('Erreur lors de l\'insertion dans la table demandes');
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'msg' => 'Opération éffectuée avec succès'
+            ], 200);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'error' => true,
+                'msg' => 'Échec de l\'opération',
+                'details' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function InsertServices(Request $request)
+    {
+        // ✅ Validation complète
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            Log::info($validator->errors());
+            return response()->json([
+                'info' => true,
+                'msg' => 'Formulaire non valide',
+                'errors' => $validator->errors()
+            ], 201);
+        }
+
+        $rech = DB::table('services')
+                    ->where('nom', $request->name)
+                    ->exists();
+
+        if ($rech) {
+            return response()->json(['success' => false, 'msg' => 'Cet service existe déjà'], 201);
+        }
+
+        DB::beginTransaction();
+
+        try {
+            // ✅ Insertion de la demande
+            $uid = $this->generateUniqueService();
+
+            $inserted = DB::table('services')->insert([
+                'uid' => $uid,
+                'entreprise_id' => 1,
+                'nom' => $request->name,
+                'description' => "SERVICE $request->name",
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            if (!$inserted) {
+                throw new Exception('Erreur lors de l\'insertion dans la table services');
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'msg' => 'Opération éffectuée avec succès'
+            ], 200);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'error' => true,
+                'msg' => 'Échec de l\'opération',
+                'details' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function InsertCategorie(Request $request)
+    {
+        // ✅ Validation complète
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'service_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            Log::info($validator->errors());
+            return response()->json([
+                'info' => true,
+                'msg' => 'Formulaire non valide',
+                'errors' => $validator->errors()
+            ], 201);
+        }
+
+        $rech = DB::table('categories_demandes')
+                    ->where('nom', $request->name)
+                    ->where('service_id', $request->service_id)
+                    ->exists();
+
+        if ($rech) {
+            return response()->json(['success' => false, 'msg' => 'Cette catégorie existe déjà'], 201);
+        }
+
+        DB::beginTransaction();
+
+        try {
+            // ✅ Insertion de la demande
+            $uid = $this->generateUniqueCategorie();
+
+            $inserted = DB::table('categories_demandes')->insert([
+                'uid' => $uid,
+                'service_id' => $request->service_id,
+                'nom' => $request->name,
+                'description' => $request->name,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            if (!$inserted) {
+                throw new Exception('Erreur lors de l\'insertion dans la table categories_demandes');
             }
 
             DB::commit();

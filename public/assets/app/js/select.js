@@ -49,11 +49,8 @@ $(document).ready(function () {
         const $el = $(id);
 
         if ($el.length) {
-
-            // ✅ Vérifie s’il y a des options réelles (hors la première "Choisir...")
             const hasOptions = $el.find('option').length > 1;
 
-            // ✅ Si aucune donnée
             if (!hasOptions) {
                 $el.empty().append($('<option>', {
                     value: '',
@@ -70,11 +67,15 @@ $(document).ready(function () {
                 allowHTML: true
             });
 
-            // 🔒 Enregistrer l’instance dans l’élément lui-même
             $el[0].choicesInstance = instance;
-            // console.log("✅ Nouvelle instance Choices créée");
+
+            // ✅ Définir une hauteur auto avec max 300px sur le dropdown
+            // const dropdown = $el[0].closest('.choices')?.querySelector('.choices__list--dropdown');
+            // if (dropdown) {
+            //     dropdown.style.maxHeight = '230px';
+            // }
         }
-    }; 
+    };
 
     window.selectData = function (id, data = [], options = {}) {
         const $el = $(id);
@@ -116,7 +117,7 @@ $(document).ready(function () {
                     text: label,
                     selected: false,
                     disabled: false
-                })); 
+                }));
             });
 
         }

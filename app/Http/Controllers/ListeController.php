@@ -258,4 +258,104 @@ class ListeController extends Controller
         return response()->json(['success' => false], 204);
     }
 
+    public function ListeService(Request $request)
+    {
+
+        $data = DB::table('services')
+                    ->where('suppr', 0)
+                    ->select(
+                        'id',
+                        'uid',
+                        'nom',
+                        'description',
+                        'created_at',
+                        DB::raw('(SELECT COUNT(*) FROM users WHERE users.service_id = services.id AND users.role_id = 3) AS nbre_traiteur'),
+                        DB::raw('(SELECT COUNT(*) FROM categories_demandes WHERE categories_demandes.service_id = services.id) AS nbre_categ'),
+                    )
+                    ->orderBy('created_at', 'desc')
+                    ->get()
+                    ->map(function ($item) {
+                        // Actions associées
+                        $item->responsable = DB::table('users')
+                            ->where('service_id', $item->id)
+                            ->where('role_id', 2)
+                            ->where('suppr', 0)
+                            ->orderBy('created_at', 'desc')
+                            ->select(
+                                'id',
+                                'name',
+                            )
+                            ->first();
+
+                        $item->traiteur = DB::table('users')
+                            ->where('service_id', $item->id)
+                            ->where('role_id', 3)
+                            ->where('suppr', 0)
+                            ->orderBy('created_at', 'desc')
+                            ->select(
+                                'id',
+                                'name',
+                            )
+                            ->get();
+
+                        $item->categories = DB::table('categories_demandes')
+                            ->where('service_id', $item->id)
+                            ->where('suppr', 0)
+                            ->orderBy('created_at', 'desc')
+                            ->select(
+                                'id',
+                                'uid',
+                                'nom',
+                                'created_at',
+                            )
+                            ->get();
+                            
+                        return $item;
+                    });
+
+
+        if ($data->isNotEmpty()) {
+            return response()->json(['success' => true, 'data' => $data], 200);
+        }
+
+        return response()->json(['success' => false], 204);
+    }
+
+    public function ListeCategorie(Request $request)
+    {
+
+        $data = DB::table('categories_demandes')
+                    ->where('suppr', 0)
+                    ->select(
+                        'id',
+                        'uid',
+                        'nom',
+                        'service_id',
+                        'created_at',
+                        DB::raw('(SELECT COUNT(*) FROM demandes WHERE demandes.categorie_id = categories_demandes.id) AS nbre_demande'),
+                    )
+                    ->orderBy('created_at', 'desc')
+                    ->get()
+                    ->map(function ($item) {
+                        // Actions associées
+                        $item->service = DB::table('services')
+                            ->where('id', $item->service_id)
+                            ->orderBy('created_at', 'desc')
+                            ->select(
+                                'id',
+                                'description',
+                            )
+                            ->first();
+                            
+                        return $item;
+                    });
+
+
+        if ($data->isNotEmpty()) {
+            return response()->json(['success' => true, 'data' => $data], 200);
+        }
+
+        return response()->json(['success' => false], 204);
+    }
+
 }

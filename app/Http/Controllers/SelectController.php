@@ -97,8 +97,8 @@ class SelectController extends Controller
                         'id',
                         'nom',
                         'description',
-                        DB::raw('(SELECT COUNT(*) FROM users WHERE users.service_id = services.id AND users.role_id = 2) AS nbre_respo'),
-                        DB::raw('(SELECT COUNT(*) FROM users WHERE users.service_id = services.id AND users.role_id = 3) AS nbre_traiteur')
+                        DB::raw('(SELECT COUNT(*) FROM users WHERE users.service_id = services.id AND users.role_id = 2 AND users.suppr = 0) AS nbre_respo'),
+                        DB::raw('(SELECT COUNT(*) FROM users WHERE users.service_id = services.id AND users.role_id = 3 AND users.suppr = 0) AS nbre_traiteur')
                     )
                     ->get();
 

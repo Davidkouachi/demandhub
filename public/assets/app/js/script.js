@@ -165,9 +165,14 @@ $(document).ready(function () {
 
     function loadScriptForPage(page) {
         const scriptMap = {
+
+            // ---------------------------------------------------------------------------------------
+
             tableau_de_bord: [
                 url_base + "/assets/app/js/pages/tableau_de_bord/index.js",
             ],
+
+            // ---------------------------------------------------------------------------------------
 
             creer_demande: [
                 url_base + "/assets/app/librairies/sheetjs/xlsx.full.min.js",
@@ -183,20 +188,28 @@ $(document).ready(function () {
                 url_base + "/assets/app/js/pages/mes_demandes/mes_demandes_traitees_rejetees.js",
             ],
 
+            // ---------------------------------------------------------------------------------------
+
             toutes_demandes_recu: [
                 url_base + "/assets/app/js/pages/demande_recu/toutes_demandes_recu.js",
             ],
+            toutes_assign_demandes: [
+                url_base + "/assets/app/js/pages/demande_assign/toutes_assign_demandes.js",
+            ],
+
+            // ---------------------------------------------------------------------------------------
 
             affecter_demande: [
                 url_base + "/assets/app/js/pages/assign_demande/index.js",
             ],
 
-            toutes_assign_demandes: [
-                url_base + "/assets/app/js/pages/demande_assign/toutes_assign_demandes.js",
-            ],
+            // ---------------------------------------------------------------------------------------
+
             demandes_assign_cours: [
                 url_base + "/assets/app/js/pages/demande_assign/demandes_assign_cours.js",
             ],
+
+            // ---------------------------------------------------------------------------------------
 
             ajouter_employe: [
                 url_base + "/assets/app/js/pages/utilisateur/ajouter_employe.js",
@@ -207,6 +220,23 @@ $(document).ready(function () {
             changer_responsable: [
                 url_base + "/assets/app/js/pages/utilisateur/changer_responsable.js",
             ],
+
+            // ---------------------------------------------------------------------------------------
+
+            creer_service: [
+                url_base + "/assets/app/js/pages/services/creer_service.js",
+            ],
+            liste_services: [
+                url_base + "/assets/app/js/pages/services/liste_services.js",
+            ],
+
+            // ---------------------------------------------------------------------------------------
+
+            categories_demandes: [
+                url_base + "/assets/app/js/pages/categorie/categories_demandes.js",
+            ],
+
+            // ---------------------------------------------------------------------------------------
         };
 
         // Supprime tous les anciens scripts

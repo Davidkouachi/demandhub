@@ -111,4 +111,86 @@ class UpdateController extends Controller
             ], 500);
         }
     }
+
+    public function UpdateService(Request $request, $service_id)
+    {
+
+        $rech = DB::table('services')->where('id', $service_id)->exists();
+
+        if (!$rech) {
+            return response()->json(['success' => false, 'msg' => 'Aucune données sur ce service n\'a été trouver'], 201);
+        }
+
+        DB::beginTransaction();
+
+        try {
+
+            $inserted = DB::table('services')->where('id', $service_id)->update([
+                'nom' => $request->name,
+                'description' => "SERVICE $request->name",
+                'updated_at' => now(),
+            ]);
+
+            if (!$inserted) {
+                throw new Exception('Erreur lors de l\'insertion dans la table services');
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'msg' => 'Opération éffectuée avec succès'
+            ], 200);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'error' => true,
+                'msg' => 'Échec de l\'opération',
+                'details' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function UpdateCategorie(Request $request, $categorie_id)
+    {
+
+        $rech = DB::table('categories_demandes')->where('id', $categorie_id)->exists();
+
+        if (!$rech) {
+            return response()->json(['success' => false, 'msg' => 'Aucune données sur cette catégorie n\'a été trouver'], 201);
+        }
+
+        DB::beginTransaction();
+
+        try {
+
+            $inserted = DB::table('categories_demandes')->where('id', $categorie_id)->update([
+                'nom' => $request->name,
+                'description' => $request->name,
+                'updated_at' => now(),
+            ]);
+
+            if (!$inserted) {
+                throw new Exception('Erreur lors de l\'insertion dans la table categories_demandes');
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'msg' => 'Opération éffectuée avec succès'
+            ], 200);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'error' => true,
+                'msg' => 'Échec de l\'opération',
+                'details' => $e->getMessage(),
+            ], 500);
+        }
+    }
 }

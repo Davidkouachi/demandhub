@@ -32,20 +32,28 @@ Route::middleware(['web', 'checkAuth'])->group(function () {
         Route::post('/InsertDesigneTraiteur/{respo_id}/{demande_id}', [InsertController::class, 'InsertDesigneTraiteur']);
         Route::post('/InsertUser', [InsertController::class, 'InsertUser']);
         Route::post('/InsertTraitement/{user_id}/{demande_id}/{type}', [InsertController::class, 'InsertTraitement']);
+        Route::post('/InsertServices', [InsertController::class, 'InsertServices']);
+        Route::post('/InsertCategorie', [InsertController::class, 'InsertCategorie']);
     // insert end
 
     // list start 
         Route::get('/ListeMesDemandes/{user_id}/{statut?}/{traiter?}', [ListeController::class, 'ListeMesDemandes']);
         Route::get('/ListeDemandesRecu/{user_id}/{role_id}/{service_id}/{statut?}', [ListeController::class, 'ListeDemandesRecu']);
         Route::get('/ListeDemandesAssign/{user_id}/{service_id}/{statut?}/{traiteur?}', [ListeController::class, 'ListeDemandesAssign']);
+        Route::get('/ListeService', [ListeController::class, 'ListeService']);
+        Route::get('/ListeCategorie', [ListeController::class, 'ListeCategorie']);
     // list end
 
     // update start 
         Route::put('/UpdateAffecterService/{employe_id}/{service_id}/{role_id}', [UpdateController::class, 'UpdateAffecterService']);
         Route::put('/UpdateChangeRespo/{employe_id}/{service_id}', [UpdateController::class, 'UpdateChangeRespo']);
+        Route::put('/UpdateService/{service_id}', [UpdateController::class, 'UpdateService']);
+        Route::put('/UpdateCategorie/{categorie_id}', [UpdateController::class, 'UpdateCategorie']);
     // update end
 
     // delete start 
         Route::delete('/DeleteMesDemandes/{user_id}/{demande_id}', [DeleteController::class, 'DeleteMesDemandes']);
+        Route::delete('/DeleteService/{service_id}', [DeleteController::class, 'DeleteService']);
+        Route::delete('/DeleteCategorie/{categorie_id}', [DeleteController::class, 'DeleteCategorie']);
     // delete end
 });

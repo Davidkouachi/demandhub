@@ -854,6 +854,185 @@ $(document).ready(function () {
         return div;
     }
 
+    // services -------------------------------------------------------------------------------------------
+
+    window.FomulaireNewService = function () {
+
+        pageTitre();
+        
+        const div = `        
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title mb-1 anchor">
+                                Formulaire
+                            </h5>
+                            <p class="text-muted">Veuillez renseigner tous les champs du formulaire et vérifier vos informations avant de l’envoyer.</p>
+                            <div class="mb-3">
+                                <form class="row g-3" id="formDemande">
+
+                                    <div class="col-md-6">
+                                        <label class="form-label">Désignation</label>
+                                        <input type="text" class="form-control" disabled value="SERVICE">
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label">Nom du service</label>
+                                        <input type="text" class="form-control" id="name" placeholder="Ex : Réclamation ...">
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" role="switch" id="validation">
+                                            <label class="form-check-label" for="validation">
+                                                Je confirme que toutes les informations renseignées sont exactes.
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <button class="btn btn-primary btnForm" type="submit">Enregistrer</button>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        return div;
+    }
+
+    window.ListeService = function () {
+
+        pageTitre();
+        
+        const div = `        
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center border-bottom">
+                            <div>
+                                <h4 class="card-title">
+                                    Liste des demandes en cours
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="card-header d-flex justify-content-between align-items-center border-bottom">
+                            <div>
+                                <div class="app-search me-auto">
+                                   <div class="position-relative">
+                                        <input type="search" id="searchInput" class="form-control form-control-sm border-1 rounded-3" placeholder="Rechercher..." autocomplete="off" value="">
+                                        <i class="ri-search-line search-widget-icon"></i>
+                                   </div>
+                              </div>
+                            </div>
+                            <div>
+                                <a class="btn btn-outline-warning rounded-pill btnActualiser">
+                                    Actualiser
+                                    <i class="ri-refresh-line"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table align-middle text-nowrap table-hover table-centered mb-0" id="tableService">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th class="text-center" >N°</th>
+                                            <th class="text-center" >Service</th>
+                                            <th class="text-center" >Nbre Traiteur</th>
+                                            <th class="text-center" >Nbre Catégorie</th>
+                                            <th class="text-center" >Date</th>
+                                            <th class="text-center" >Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination justify-content-end mb-0" id="pagination"></ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        return div;
+    }
+
+    // Categorie ---------------------------------------------------------------------
+
+    window.ListeCategorie = function () {
+
+        pageTitre();
+        
+        const div = `        
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center border-bottom">
+                            <div>
+                                <h4 class="card-title">
+                                    Liste des categories des demandes
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="card-header d-flex justify-content-between align-items-center border-bottom">
+                            <div>
+                                <div class="app-search me-auto">
+                                   <div class="position-relative">
+                                        <input type="search" id="searchInput" class="form-control form-control-sm border-1 rounded-3" placeholder="Rechercher..." autocomplete="off" value="">
+                                        <i class="ri-search-line search-widget-icon"></i>
+                                   </div>
+                              </div>
+                            </div>
+                            <div>
+                                <a class="btn btn-success rounded-pill btnAjouter">
+                                    Ajouter
+                                    <i class="ri-add-circle-line"></i>
+                                </a>
+                                <a class="btn btn-outline-warning rounded-pill btnActualiser">
+                                    Actualiser
+                                    <i class="ri-refresh-line"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table align-middle text-nowrap table-hover table-centered mb-0" id="tablecategorie">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th class="text-center" >N°</th>
+                                            <th class="text-center" >Catégorie</th>
+                                            <th class="text-center" >Service</th>
+                                            <th class="text-center" >Date</th>
+                                            <th class="text-center" >Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination justify-content-end mb-0" id="pagination"></ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        return div;
+    }
+
     // ---------------------------------------------------------------------
 
     window.structureMenus = function (menus) {
