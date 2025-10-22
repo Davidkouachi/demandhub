@@ -47,6 +47,8 @@ class ListeController extends Controller
                 'demandes.id',
                 'demandes.uid',
                 'demandes.categorie_id',
+                'demandes.date_limite',
+                'demandes.date_traiter',
                 'demandes.objet',
                 'demandes.description',
                 'demandes.statut',
@@ -125,6 +127,8 @@ class ListeController extends Controller
                 'demandes.uid',
                 'demandes.traiteur_id',
                 'demandes.categorie_id',
+                'demandes.date_limite',
+                'demandes.date_traiter',
                 'demandes.objet',
                 'demandes.description',
                 'demandes.statut',
@@ -210,12 +214,14 @@ class ListeController extends Controller
                 'demandes.uid',
                 'demandes.traiteur_id',
                 'demandes.categorie_id',
+                'demandes.date_limite',
                 'demandes.objet',
                 'demandes.description',
                 'demandes.traiter',
                 'demandes.statut',
                 'demandes.created_at',
                 'demandes.date_limite',
+                'demandes.date_traiter',
                 'u1.name as name',
                 'u1.email as email',
                 'u1.tel as tel',        // Nom du demandeur
@@ -349,6 +355,38 @@ class ListeController extends Controller
                             
                         return $item;
                     });
+
+
+        if ($data->isNotEmpty()) {
+            return response()->json(['success' => true, 'data' => $data], 200);
+        }
+
+        return response()->json(['success' => false], 204);
+    }
+
+    public function ListeEmploye(Request $request)
+    {
+
+        $data = DB::table('users')
+                    ->leftjoin('services', 'services.id', '=', 'users.service_id')
+                    ->where('users.suppr', 0)
+                    ->where('services.suppr', 0)
+                    ->select(
+                        'users.id',
+                        'users.uid',
+                        'users.name',
+                        'users.tel',
+                        'users.login',
+                        'users.email',
+                        'users.suppr',
+                        'users.lock',
+                        'users.role_id',
+                        'users.service_id',
+                        'users.created_at',
+                        'services.description as service',
+                    )
+                    ->orderBy('created_at', 'desc')
+                    ->get();
 
 
         if ($data->isNotEmpty()) {

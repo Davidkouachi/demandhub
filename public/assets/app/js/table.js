@@ -26,11 +26,138 @@ $(document).ready(function() {
 		}		
 	};
 
-    window.renderDynamicTable = function(tableId, statutSelect = null, searchInputId, paginationId, rowRenderer, data) {
+    // window.renderDynamicTable = function(tableId, statutSelect = null, searchInputId, paginationId, rowRenderer, data) {
+	//     const $tableBody = $(tableId + " tbody");
+	//     const $pagination = $(paginationId);
+	//     const $searchInput = $(searchInputId);
+	//     const $statutSelect = $(statutSelect);
+
+	//     let filteredData = [...data];
+	//     let currentPage = 1;
+	//     const rowsPerPage = 10;
+
+	//     function renderTable() {
+	//         $tableBody.empty();
+
+	//         if (!filteredData.length) {
+	//             const colspan = $(tableId + " thead th").length;
+	//             $tableBody.append(`
+	//                 <tr>
+	//                     <td colspan="${colspan}" class="text-center text-danger py-3">
+	//                         Aucun résultat trouvé
+	//                     </td>
+	//                 </tr>
+	//             `);
+	//             $pagination.empty();
+	//             return;
+	//         }
+
+	//         const start = (currentPage - 1) * rowsPerPage;
+	//         const end = start + rowsPerPage;
+	//         const pageData = filteredData.slice(start, end);
+
+	//         $.each(pageData, function(index, item) {
+	//             const trHtml = rowRenderer(item, index, start);
+	//             $tableBody.append(trHtml);
+	//         });
+
+	//         renderPagination();
+	//     }
+
+	//     function renderPagination() {
+	//         $pagination.empty();
+	//         const pageCount = Math.ceil(filteredData.length / rowsPerPage);
+	//         if (pageCount <= 1) return;
+
+	//         const maxVisible = 5;
+	//         const createPageLi = (num, isActive = false) => {
+	//             const li = $(`<li class="page-item ${isActive ? 'active' : ''}"><a class="page-link" href="javascript:void(0)">${num}</a></li>`);
+	//             li.on("click", function() { currentPage = num; renderTable(); });
+	//             return li;
+	//         };
+
+	//         const prevLi = $(`<li class="page-item ${currentPage == 1 ? 'disabled' : ''}"><a class="page-link" href="javascript:void(0)">Précédent</a></li>`);
+	//         prevLi.on("click", function() { if (currentPage > 1) { currentPage--; renderTable(); } });
+	//         $pagination.append(prevLi);
+
+	//         if (pageCount <= maxVisible) {
+	//             for (let i = 1; i <= pageCount; i++) {
+	//                 $pagination.append(createPageLi(i, currentPage == i));
+	//             }
+	//         } else {
+	//             const visiblePages = [];
+	//             if (currentPage <= 3) visiblePages.push(1,2,3,'...',pageCount-1,pageCount);
+	//             else if (currentPage >= pageCount-2) visiblePages.push(1,2,'...',pageCount-2,pageCount-1,pageCount);
+	//             else visiblePages.push(1,'...',currentPage-1,currentPage,currentPage+1,'...',pageCount);
+
+	//             visiblePages.forEach(p => {
+	//                 if (p == '...') $pagination.append(`<li class="page-item disabled"><a class="page-link" href="#">...</a></li>`);
+	//                 else $pagination.append(createPageLi(p, currentPage == p));
+	//             });
+	//         }
+
+	//         const nextLi = $(`<li class="page-item ${currentPage == pageCount ? 'disabled' : ''}"><a class="page-link" href="javascript:void(0)">Suivant</a></li>`);
+	//         nextLi.on("click", function() { if (currentPage < pageCount) { currentPage++; renderTable(); } });
+	//         $pagination.append(nextLi);
+	//     }
+
+	//     // Fonction unique pour appliquer les filtres
+	//     function applyFilters() {
+	//         const query = $searchInput.val().toLowerCase();
+	//         const statutValue = ($statutSelect && $statutSelect.length) ? $statutSelect.val() : "0";
+
+	//         filteredData = data.filter(item => {
+	//             // Recherche globale
+	//             const matchSearch = Object.values(item).some(val => String(val).toLowerCase().includes(query));
+	            
+	//             // Filtrage par statut
+	//             let matchStatut = true;
+	//             if (statutValue !== "0") matchStatut = item.statut == statutValue;
+
+	//             return matchSearch && matchStatut;
+	//         });
+
+	//         currentPage = 1;
+	//         renderTable();
+	//     }
+
+	//     // Appliquer immédiatement
+	//     applyFilters();
+
+	//     // Événements
+	//     $searchInput.on("input", applyFilters);
+	//     if ($statutSelect && $statutSelect.length) $statutSelect.on("change", applyFilters);
+	// };
+
+	window.renderDynamicTable = function(
+	    tableId,
+	    selectConfig = null, // 👈 Peut être "#statut" ou { id: "#selectType", key: "type" }
+	    searchInputId,
+	    paginationId,
+	    rowRenderer,
+	    data
+	) {
 	    const $tableBody = $(tableId + " tbody");
 	    const $pagination = $(paginationId);
 	    const $searchInput = $(searchInputId);
-	    const $statutSelect = $(statutSelect);
+
+	    // 🧠 Gestion sécurisée du paramètre select
+	    let $select = null;
+	    let filterKey = null;
+
+	    if (typeof selectConfig == "string" && selectConfig.trim() !== "") {
+	        // ex : "#statut"
+	        $select = $(selectConfig);
+	        filterKey = selectConfig.replace('#', '');
+	    } else if (selectConfig && typeof selectConfig == "object" && selectConfig.id) {
+	        // ex : { id: "#selectType", key: "type" }
+	        $select = $(selectConfig.id);
+	        filterKey = selectConfig.key || selectConfig.id.replace('#', '');
+	    } else {
+	        // Aucun select fourni
+	        $select = null;
+	        filterKey = null;
+	    }
 
 	    let filteredData = [...data];
 	    let currentPage = 1;
@@ -71,18 +198,20 @@ $(document).ready(function() {
 
 	        const maxVisible = 5;
 	        const createPageLi = (num, isActive = false) => {
-	            const li = $(`<li class="page-item ${isActive ? 'active' : ''}"><a class="page-link" href="javascript:void(0)">${num}</a></li>`);
+	            const li = $(`<li class="page-item ${isActive ? 'active' : ''}">
+	                <a class="page-link" href="javascript:void(0)">${num}</a></li>`);
 	            li.on("click", function() { currentPage = num; renderTable(); });
 	            return li;
 	        };
 
-	        const prevLi = $(`<li class="page-item ${currentPage === 1 ? 'disabled' : ''}"><a class="page-link" href="javascript:void(0)">Précédent</a></li>`);
+	        const prevLi = $(`<li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+	            <a class="page-link" href="javascript:void(0)">Précédent</a></li>`);
 	        prevLi.on("click", function() { if (currentPage > 1) { currentPage--; renderTable(); } });
 	        $pagination.append(prevLi);
 
 	        if (pageCount <= maxVisible) {
 	            for (let i = 1; i <= pageCount; i++) {
-	                $pagination.append(createPageLi(i, currentPage === i));
+	                $pagination.append(createPageLi(i, currentPage == i));
 	            }
 	        } else {
 	            const visiblePages = [];
@@ -91,42 +220,45 @@ $(document).ready(function() {
 	            else visiblePages.push(1,'...',currentPage-1,currentPage,currentPage+1,'...',pageCount);
 
 	            visiblePages.forEach(p => {
-	                if (p === '...') $pagination.append(`<li class="page-item disabled"><a class="page-link" href="#">...</a></li>`);
-	                else $pagination.append(createPageLi(p, currentPage === p));
+	                if (p == '...') $pagination.append(`<li class="page-item disabled"><a class="page-link" href="#">...</a></li>`);
+	                else $pagination.append(createPageLi(p, currentPage == p));
 	            });
 	        }
 
-	        const nextLi = $(`<li class="page-item ${currentPage === pageCount ? 'disabled' : ''}"><a class="page-link" href="javascript:void(0)">Suivant</a></li>`);
+	        const nextLi = $(`<li class="page-item ${currentPage == pageCount ? 'disabled' : ''}">
+	            <a class="page-link" href="javascript:void(0)">Suivant</a></li>`);
 	        nextLi.on("click", function() { if (currentPage < pageCount) { currentPage++; renderTable(); } });
 	        $pagination.append(nextLi);
 	    }
 
-	    // Fonction unique pour appliquer les filtres
+	    // 🔍 Fonction de filtrage
 	    function applyFilters() {
 	        const query = $searchInput.val().toLowerCase();
-	        const statutValue = ($statutSelect && $statutSelect.length) ? $statutSelect.val() : "0";
+	        const selectValue = ($select && $select.length) ? $select.val() : "0";
 
 	        filteredData = data.filter(item => {
-	            // Recherche globale
-	            const matchSearch = Object.values(item).some(val => String(val).toLowerCase().includes(query));
-	            
-	            // Filtrage par statut
-	            let matchStatut = true;
-	            if (statutValue !== "0") matchStatut = item.statut === statutValue;
+	            const matchSearch = Object.values(item).some(val =>
+	                String(val).toLowerCase().includes(query)
+	            );
 
-	            return matchSearch && matchStatut;
+	            let matchSelect = true;
+	            if (filterKey && selectValue !== "0" && selectValue !== "" && selectValue !== null) {
+	                matchSelect = item[filterKey] == selectValue;
+	            }
+
+	            return matchSearch && matchSelect;
 	        });
 
 	        currentPage = 1;
 	        renderTable();
 	    }
 
-	    // Appliquer immédiatement
+	    // 🟢 Initialisation
 	    applyFilters();
 
-	    // Événements
+	    // 🧠 Événements
 	    $searchInput.on("input", applyFilters);
-	    if ($statutSelect && $statutSelect.length) $statutSelect.on("change", applyFilters);
+	    if ($select && $select.length) $select.on("change", applyFilters);
 	};
 
 	// Fonction globale pour afficher un "modal custom"

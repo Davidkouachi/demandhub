@@ -8,6 +8,7 @@ $(document).ready(function() {
     function initStart()  {
 
         globalePage.append(FomulaireNewService());
+        numberTel('#delai');
         textMajuscule('#name');
         
     }
@@ -19,13 +20,14 @@ $(document).ready(function() {
         const btnLabel = $('.btnForm').text(); 
 
         const name = $('#name');
+        const delai = $('#delai');
         const validation = $('#validation');
 
-        if (!name.val().trim()) {
+        if (!name.val().trim() || !delai.val().trim()) {
 
             showAlert(
                 "Attention", 
-                "Veuillez saisir le nom du service s'il vous plaît", 
+                "Veuillez remplir tous les champs s'il vous plaît", 
                 "info"
             );
 
@@ -45,6 +47,7 @@ $(document).ready(function() {
 
         const data = {
             name: $('#name').val(),
+            delai: $('#delai').val(),
             validation: validation.is(':checked') ? 1 : 0,
         };
 
@@ -63,6 +66,7 @@ $(document).ready(function() {
     function resetForm() {
         // Réinitialise les champs texte
         $('#name').val(null);
+        $('#delai').val(5);
         $('#validation').prop('checked', false);
     }
 

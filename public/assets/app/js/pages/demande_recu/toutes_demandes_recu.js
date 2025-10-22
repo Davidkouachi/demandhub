@@ -74,7 +74,8 @@ $(document).ready(function() {
                             ${item.statut == 'en_attente' ? `
                                 <a href="#!" class="btn btn-soft-dark btn-sm btn-option rounded-2"
                                     data-id="${item.id}"
-                                    data-statut="${item.statut}">
+                                    data-statut="${item.statut}"
+                                    data-date_limite="${item.date_limite}">
                                     <i class="ri-settings-4-line align-middle fs-18"></i>
                                 </a>
                             ` : ` `}
@@ -247,6 +248,7 @@ $(document).ready(function() {
             const data = {
                 id: $(this).data("id"),
                 statut: $(this).data("statut"),
+                date: $(this).data("date_limite"),
             };
 
             if (data.id) {
@@ -268,7 +270,7 @@ $(document).ready(function() {
 
                     if (action == 'btn-optionModal-assigne') {
 
-                        designeTraiteur(id);
+                        designeTraiteur(id, data.date);
                     }
 
                     if (typeof window.handleModalAction === "function") {
@@ -351,7 +353,7 @@ $(document).ready(function() {
 
     }
 
-    function designeTraiteur(id) {
+    function designeTraiteur(id, date) {
 
         let html = `
             <div class="row g-3" >
@@ -361,7 +363,7 @@ $(document).ready(function() {
                 </div>
                 <div class="col-12">
                     <label for="objet" class="form-label">Date limite de traitement</label>
-                    <input type="datetime-local" class="form-control" id="date">
+                    <input type="datetime-local" class="form-control" id="date" value="${date}">
                 </div>
                 <div class="col-12">
                     <button class="btn btn-success btnChoixTraiteur" >Valider</button>

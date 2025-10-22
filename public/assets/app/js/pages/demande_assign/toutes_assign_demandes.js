@@ -45,37 +45,47 @@ $(document).ready(function() {
                     <td class="text-center" >${item.categorie}</td>
                     <td class="text-center">
                         <span class="badge 
-                            ${item.statut === 'en_attente' ? 'bg-warning' :
-                              item.statut === 'en_cours'   ? 'bg-primary' :
-                              item.statut === 'traitee'    ? 'bg-success' :
-                              item.statut === 'rejete'     ? 'bg-danger' :
+                            ${item.statut == 'en_attente' ? 'bg-warning' :
+                              item.statut == 'en_cours'   ? 'bg-primary' :
+                              item.statut == 'traitee'    ? 'bg-success' :
+                              item.statut == 'rejete'     ? 'bg-danger' :
                               'bg-secondary-subtle text-secondary'} 
                             py-1 px-2 fs-13">
-                            ${item.statut === 'en_attente' ? 'En attente' :
-                              item.statut === 'en_cours'   ? 'En cours' :
-                              item.statut === 'traitee'    ? 'Terminé' :
-                              item.statut === 'rejete'     ? 'Rejété' :
+                            ${item.statut == 'en_attente' ? 'En attente' :
+                              item.statut == 'en_cours'   ? 'En cours' :
+                              item.statut == 'traitee'    ? 'Terminé' :
+                              item.statut == 'rejete'     ? 'Rejété' :
                               item.statut}
                         </span>
-                    </td>
-                    <td class="text-center" >
-                        ${(Array.isArray(item.fichiers) && item.fichiers.length > 0) ? `
-                                ${item.fichiers.length}
-                            ` : `0` }
                     </td>
                     <td class="text-center">
                         <span class="badge 
                             ${(() => {
                                 const now = new Date();
                                 const limite = new Date(item.date_limite);
+                                const dateTraiter = item.date_traiter ? new Date(item.date_traiter) : null;
 
-                                return limite > now ? 'bg-success' : 
-                                    limite == now ? 'bg-warning' : 
-                                    'bg-danger';
+                                // 🟡 Si non traité
+                                if (dateTraiter) {
+                                    if (dateTraiter < limite ) return 'bg-success'; // encore dans le délai
+                                    if (dateTraiter == limite) return 'bg-warning'; // aujourd’hui
+                                    if (dateTraiter > limite) return 'bg-danger';
+                                } 
+                                // else {
+                                //     if (limite > now ) return 'bg-success'; // encore dans le délai
+                                //     if (limite == now) return 'bg-warning'; // aujourd’hui
+                                //     if (limite < now ) return 'bg-danger';
+                                // }
+
+                                // ⚪ Cas par défaut
+                                return 'bg-dark';
                             })()} 
                             py-1 px-2 fs-13">
-                            ${formatDateHeure(item.date_limite)}
+                            ${item.date_traiter ? formatDateHeure(item.date_traiter) : `néant`}
                         </span>
+                    </td>
+                    <td class="text-center" >
+                        ${formatDateHeure(item.date_limite)}
                     </td>
                     <td class="text-center" >
                         <div class="d-flex align-items-center justify-content-center gap-2">
@@ -107,6 +117,27 @@ $(document).ready(function() {
                 return;
             }
 
+            let colorEff = 'bg-dark';
+            let textEff = 'Néant';
+
+            const now = new Date();
+            const limite = new Date(demande.date_limite);
+            const dateTraiter = demande.date_traiter ? new Date(demande.date_traiter) : null;
+
+            if (dateTraiter) {
+                if (dateTraiter < limite ) colorEff = 'bg-success'; textEff = 'Traiter avant le délai';
+                if (dateTraiter == limite) colorEff = 'bg-warning'; textEff = 'Traiter pendant le délai';
+                if (dateTraiter > limite) colorEff = 'bg-danger'; textEff = 'Traiter apèes le délai';
+            }
+
+            let colorSat = 'bg-dark';
+            let textSat = 'Néant';
+
+            if ( demande.statut == 'en_attente') colorSat = 'bg-primary'; textSat = 'En attente';
+            if ( demande.statut == 'en_cours') colorSat = 'bg-warning'; textSat = 'En cours';
+            if ( demande.statut == 'traitee') colorSat = 'bg-success'; textSat = 'Traiter';
+            if ( demande.statut == 'rejete') colorSat = 'bg-success'; textSat = 'Rejeter';
+
             let html = `
                 <div class="p-2">
                    <div class="card-body">
@@ -131,19 +162,19 @@ $(document).ready(function() {
                                   <p class="text-dark fw-semibold fs-16 mb-1">Date de réception :</p>
                                   <p class="mb-0">${formatDateHeure(demande.created_at)}</p>
                              </div>
-                            <div class="col-12 my-2">
+                            <div class="col-lg-3 my-2">
                                   <h4 class="card-title mb-2 text-dark fw-semibold">Statut :</h4>
                                   <p class="mb-0">
-                                    <span class="badge bg-${demande.statut === 'en_attente' ? 'primary' :
-                                              demande.statut === 'en_cours'   ? 'warning' :
-                                              demande.statut === 'traitee'    ? 'success' :
-                                              demande.statut === 'rejete'     ? 'danger' :
-                                              demande.statut} text-white fs-14 px-2 py-1">
-                                        ${demande.statut === 'en_attente' ? 'En attente' :
-                                              demande.statut === 'en_cours'   ? 'En cours' :
-                                              demande.statut === 'traitee'    ? 'Terminé' :
-                                              demande.statut === 'rejete'     ? 'Rejété' :
-                                              demande.statut}
+                                    <span class="badge ${colorSat} text-white fs-14 px-2 py-1">
+                                        ${textSat}
+                                    </span>
+                                  </p>
+                             </div>
+                            <div class="col-lg-3 my-2">
+                                  <h4 class="card-title mb-2 text-dark fw-semibold">Efficacité :</h4>
+                                  <p class="mb-0">
+                                    <span class="badge ${colorEff} text-white fs-14 px-2 py-1">
+                                        ${textEff}
                                     </span>
                                   </p>
                              </div>

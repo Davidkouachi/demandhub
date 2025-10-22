@@ -142,6 +142,26 @@ class InsertController extends Controller
             ], 201);
         }
 
+        $rech = DB::table('services')
+                ->join('categories_demandes', 'categories_demandes.service_id', '=', 'services.id')
+                ->where('categories_demandes.id', $request->categorie_id)
+                ->select('services.delai')
+                ->first();
+
+        $delai = 0;
+
+        if ($rech) {
+            $delai = $rech->delai;
+        }
+
+        if ($delai == 0) {
+            return response()->json([
+                'info' => true,
+                'msg' => 'Impossible de recuperer le delai de traitement de la demande',
+                'errors' => $validator->errors()
+            ], 201);
+        }
+
         DB::beginTransaction();
 
         try {
@@ -151,6 +171,7 @@ class InsertController extends Controller
             $inserted = DB::table('demandes')->insert([
                 'uid' => $demandeUid,
                 'user_id' => $user_id,
+                'date_limite' => now()->addDays($delai),
                 'categorie_id' => $request->categorie_id,
                 'objet' => $request->objet,
                 'description' => $request->description,
@@ -489,6 +510,7 @@ class InsertController extends Controller
                 'entreprise_id' => 1,
                 'nom' => $request->name,
                 'description' => "SERVICE $request->name",
+                'delai' => $request->delai,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

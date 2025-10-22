@@ -214,6 +214,9 @@ $(document).ready(function () {
             ajouter_employe: [
                 url_base + "/assets/app/js/pages/utilisateur/ajouter_employe.js",
             ],
+            liste_employes: [
+                url_base + "/assets/app/js/pages/utilisateur/liste_employes.js",
+            ],
             affecter_employe_service: [
                 url_base + "/assets/app/js/pages/utilisateur/affecter_employe_service.js",
             ],

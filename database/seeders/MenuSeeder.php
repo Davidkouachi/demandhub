@@ -81,10 +81,6 @@ class MenuSeeder extends Seeder
         # SOUS-MENUS
         # ======================================================================
         $subMenus = [
-            // Statistiques & rapports (anciennement sous Tableau de bord)
-            ['name' => 'Statistiques globales', 'slug' => 'statistiques_globales', 'parent_id' => 12, 'order' => 1],
-            ['name' => 'Vue rapide des demandes', 'slug' => 'vue_rapide_demandes', 'parent_id' => 12, 'order' => 2],
-
             //Demandes recu
             ['name' => 'Toutes les demandes', 'slug' => 'toutes_demandes_recu', 'parent_id' => 3, 'order' => 1],
             ['name' => 'Demandes assignées', 'slug' => 'toutes_assign_demandes', 'parent_id' => 3, 'order' => 2],
@@ -110,7 +106,9 @@ class MenuSeeder extends Seeder
             ['name' => 'Changer les accès', 'slug' => 'changer_acces', 'parent_id' => 8, 'order' => 5],
 
             // Statistiques & rapports (autres sous-menus)
-            ['name' => 'Rapports globaux', 'slug' => 'rapports_globaux', 'parent_id' => 12, 'order' => 3],
+            ['name' => 'Bilan', 'slug' => 'bilan', 'parent_id' => 12, 'order' => 1],
+            ['name' => 'Rapports', 'slug' => 'rapports', 'parent_id' => 12, 'order' => 2],
+            ['name' => 'Statistiques des demandes', 'slug' => 'vue_rapide_demandes', 'parent_id' => 12, 'order' => 3],
             ['name' => 'Statistiques par service', 'slug' => 'statistiques_service', 'parent_id' => 12, 'order' => 4],
 
             // Parametre (autres sous-menus)
@@ -119,7 +117,8 @@ class MenuSeeder extends Seeder
             // Service respo
             ['name' => 'Créer un traiteur', 'slug' => 'ajouter_traiteur', 'parent_id' => 15, 'order' => 1],
             ['name' => 'Liste des traiteur', 'slug' => 'liste_traiteur', 'parent_id' => 15, 'order' => 2],
-            ['name' => 'Changer les accès', 'slug' => 'changer_acces_traiteur', 'parent_id' => 15, 'order' => 3],
+            ['name' => 'Catégories de demandes', 'slug' => 'categorie_respo', 'parent_id' => 15, 'order' => 3],
+            ['name' => 'Changer les accès', 'slug' => 'changer_acces_traiteur', 'parent_id' => 15, 'order' => 4],
         ];
 
 
@@ -143,7 +142,33 @@ class MenuSeeder extends Seeder
         $insertData = [];
 
         // ADMIN → tous les menus
-        foreach ($menus as $menu) $insertData[] = ['role_id' => 1, 'menu_id' => $menu->id];
+        // foreach ($menus as $menu) $insertData[] = ['role_id' => 1, 'menu_id' => $menu->id];
+
+        // ADMIN
+        $adminSlugs = [
+            'tableau_de_bord', 
+            'gestion_services',
+                'creer_service',
+                'liste_services',
+            'utilisateurs',
+                'ajouter_employe',
+                'liste_employes',
+                'affecter_employe_service',
+                'changer_responsable',
+                'changer_acces',
+            'categories_demandes',
+            'limitations_demandes',
+            'verrouillage_compte',
+            'statistiques',
+                'bilan',
+                'rapports',
+                'vue_rapide_demandes',
+                'statistiques_service',
+            'suivi',
+            'parametres',
+                'update_password',
+        ];
+        foreach ($adminSlugs as $slug) if ($menus->has($slug)) $insertData[] = ['role_id' => 1, 'menu_id' => $menus[$slug]->id];
 
         // RESPONSABLE
         $responsableSlugs = [
@@ -160,8 +185,8 @@ class MenuSeeder extends Seeder
             'gestion_service_respo',
                 'ajouter_traiteur',
                 'liste_traiteur',
-                'changer_acces_traiteur',
-            'categories_demandes', 
+                'categorie_respo',
+                'changer_acces_traiteur', 
             'suivi',
             'parametres',
                 'update_password',
@@ -174,7 +199,6 @@ class MenuSeeder extends Seeder
             'demandes_assignees', 
                 'demandes_assign_cours', 
                 'demandes_assign_traitees', 
-            'suivi', 
             'statistiques', 
             'parametres',
                 'update_password',

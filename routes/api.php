@@ -42,6 +42,7 @@ Route::middleware(['web', 'checkAuth'])->group(function () {
         Route::get('/ListeDemandesAssign/{user_id}/{service_id}/{statut?}/{traiteur?}', [ListeController::class, 'ListeDemandesAssign']);
         Route::get('/ListeService', [ListeController::class, 'ListeService']);
         Route::get('/ListeCategorie', [ListeController::class, 'ListeCategorie']);
+        Route::get('/ListeEmploye', [ListeController::class, 'ListeEmploye']);
     // list end
 
     // update start 

@@ -127,6 +127,10 @@ $(document).ready(function() {
                                   <p class="text-dark fw-semibold fs-16 mb-1">Catégorie :</p>
                                   <p class="mb-0">${demande.categorie}</p>
                              </div>
+                            <div class="col-lg-3 my-2">
+                                  <p class="text-dark fw-semibold fs-16 mb-1">Date limite de traitement :</p>
+                                  <p class="mb-0">${formatDateHeure(demande.date_limite)}</p>
+                             </div>
                              <div class="col-lg-3 my-2">
                                   <p class="text-dark fw-semibold fs-16 mb-1">Date d'envoi :</p>
                                   <p class="mb-0">${formatDateHeure(demande.created_at)}</p>

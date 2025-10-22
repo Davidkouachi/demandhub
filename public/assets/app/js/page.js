@@ -611,7 +611,7 @@ $(document).ready(function () {
                                             <th class="text-center" >Identifiant</th>
                                             <th class="text-center" >Catégorie</th>
                                             <th class="text-center" >Statuts</th>
-                                            <th class="text-center" >Fichier(s)</th>
+                                            <th class="text-center" >Date de traitement</th>
                                             <th class="text-center" >Date Limite</th>
                                             <th class="text-center" >Actions</th>
                                         </tr>
@@ -770,6 +770,81 @@ $(document).ready(function () {
         return div;
     }
 
+    window.ListeEmploye = function () {
+
+        pageTitre();
+        
+        const div = `        
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center border-bottom">
+                            <div>
+                                <h4 class="card-title">
+                                    Liste des employés
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="card-header d-flex justify-content-between align-items-center border-bottom">
+                            <div>
+                                <div class="app-search me-auto">
+                                   <div class="position-relative">
+                                        <input type="search" id="searchInput" class="form-control form-control-sm border-1 rounded-3" placeholder="Rechercher..." autocomplete="off" value="">
+                                        <i class="ri-search-line search-widget-icon"></i>
+                                   </div>
+                              </div>
+                            </div>
+                            <div>
+                                <a class="btn btn-outline-warning rounded-pill btnActualiser">
+                                    Actualiser
+                                    <i class="ri-refresh-line"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-header border-bottom">
+                            <div class="row g-3 paraTable" >
+                                <div class="col-md-3">
+                                    <label class="form-label">Statut</label>
+                                    <select class="form-control" data-choices id="role">
+                                        <option selected value="0">Tout</option>
+                                        <option value="2" >Responsables</option>
+                                        <option value="4" >Employés</option>
+                                        <option value="3" >Traiteur</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table align-middle text-nowrap table-hover table-centered mb-0" id="tableEmploye">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th class="text-center" >N°</th>
+                                            <th class="text-center" >Nom</th>
+                                            <th class="text-center" >Email</th>
+                                            <th class="text-center" >Contact</th>
+                                            <th class="text-center" >Rôle</th>
+                                            <th class="text-center" >Date d'enregistrement</th>
+                                            <th class="text-center" >Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination justify-content-end mb-0" id="pagination"></ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        return div;
+    }
+
     window.FormulaireAffecterEmploye = function () {
 
         pageTitre();
@@ -872,14 +947,19 @@ $(document).ready(function () {
                             <div class="mb-3">
                                 <form class="row g-3" id="formDemande">
 
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <label class="form-label">Désignation</label>
                                         <input type="text" class="form-control" disabled value="SERVICE">
                                     </div>
 
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <label class="form-label">Nom du service</label>
                                         <input type="text" class="form-control" id="name" placeholder="Ex : Réclamation ...">
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label for="tel" class="form-label">Délai de traitement des demandes</label>
+                                        <input type="tel" class="form-control" id="delai" value="5">
                                     </div>
 
                                     <div class="col-12">

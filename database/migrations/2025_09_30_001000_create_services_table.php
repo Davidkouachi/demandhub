@@ -17,6 +17,7 @@ return new class extends Migration
             $table->integer('entreprise_id');
             $table->string('nom');
             $table->string('description')->nullable();
+            $table->integer('delai')->default(5);
             $table->boolean('suppr')->default(false);
             $table->timestamps();
         });
